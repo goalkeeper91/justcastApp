@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:justcast_app/provider/theme_provider.dart';
 import 'package:justcast_app/screen/add_new_match.dart';
 import 'package:justcast_app/screen/login.dart';
 import 'package:justcast_app/screen/register.dart';
+import 'package:provider/provider.dart';
 
 const MaterialColor white = const MaterialColor(
   0xFFFFFFFF,
@@ -29,14 +31,17 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => ChangeNotifierProvider(
+    create: (context) => ThemeProvider(),
+    builder: (context, _) {
+      final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       title: 'JustCast',
-      theme: ThemeData(
-        primarySwatch: white,
-        scaffoldBackgroundColor: Colors.blue[800],
-      ),
+      themeMode: themeProvider.themeMode,
+      theme: MyThemes.lightTheme,
+      darkTheme: MyThemes.darkTheme,
       home: Login(),
     );
-  }
+  },
+  );
 }

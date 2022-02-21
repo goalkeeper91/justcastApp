@@ -18,7 +18,6 @@ class AuthServices{
       headers: headers,
       body: body,
     );
-    print(response.body);
     return response;
   }
 
@@ -36,7 +35,41 @@ class AuthServices{
       headers: headers,
       body: body,
     );
-    print(response.body);
+    return response;
+  }
+
+  static Future<http.Response> update(
+      String user, String username, String email, String? password
+      ) async {
+    Map data = {
+      "user":user,
+      "username":username,
+      "email":email,
+      "password":password
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL+'user/update');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> delete(
+      String username
+      ) async {
+    Map data = {
+      "username":username,
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL+'user/delete');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
     return response;
   }
 }

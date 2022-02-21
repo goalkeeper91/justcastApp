@@ -40,8 +40,9 @@ dependencies:
   dio: ^4.0.4
   intl: ^0.17.0
   flutter_datetime_picker: ^1.5.1
-
+  url_launcher:
   shared_preferences: ^2.0.12
+  provider:
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ flutter:
      - assets/images/events/2/
      - assets/images/events/3/
      - assets/images/games/
+     - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

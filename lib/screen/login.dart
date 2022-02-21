@@ -1,14 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:justcast_app/class/user.dart';
-import 'package:justcast_app/rounded_button.dart';
+import 'package:justcast_app/widget/change_theme_button_widget.dart';
+import 'package:justcast_app/widget/rounded_button.dart';
 import 'package:justcast_app/screen/dashboard.dart';
 import 'package:justcast_app/screen/register.dart';
 import 'package:http/http.dart' as http;
 import 'package:justcast_app/services/auth_services.dart';
 import 'package:justcast_app/services/globals.dart';
-import 'package:justcast_app/services/navigation_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -27,7 +27,12 @@ class _LoginState extends State<Login> {
       Map responseMap = jsonDecode(response.body);
       if(response.statusCode==200) {
           userAuth = responseMap['user']['username'];
-          print(userAuth);
+          userId = responseMap['user']['id'];
+          userEmail = responseMap['user']['email'];
+          casterId = responseMap['caster']?['id'];
+          if(casterId != null){
+            isCaster = true;
+          }
 
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => const Dashboard()
@@ -42,31 +47,52 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         appBar: AppBar(
+          iconTheme: Theme.of(context).iconTheme,
+          backgroundColor: Theme.of(context).backgroundColor,
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.network('https://www.justcast.org/images/logo.png',
-                fit: BoxFit.contain,
-                height: 46,
-              ),
-             ],
-            ),
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          launch('https://discord.gg/WYfmfzskwr');
+                        },
+                        icon: Container(
+                          decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
+                      ),
+                      const SizedBox(
+                        width: 50,
+                      ),
+                      Image.asset(
+                        isDarkMode
+                        ? 'assets/images/logo_white.png'
+                        : 'assets/images/logo_black.png',
+                        fit: BoxFit.contain,
+                        height: 80,
+                      ),
+                    ]
+                ),
           actions: [
             PopupMenuButton(
                 itemBuilder: (context) {
                   return [
                     PopupMenuItem<int>(
-                        value: 0,
-                        child: Text("Optionen"),
+                      value: 0,
+                      child: Column(
+                        children: [
+                           ChangeThemeButtonWidget(),
+                        ]
+                      ),
                     ),
                   ];
                 },
-              onSelected: (value) {
-                  if(value == 0) {
-                    NavigationService.onPressedOption(this.context);
-                  }
+              onSelected: (value) {if(value == 0) {
+                ;
+              }
               },
             ),
           ],
@@ -77,7 +103,7 @@ class _LoginState extends State<Login> {
         child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: const Color(0xFAFAF8EB),
+              color: Theme.of(context).primaryColor,
             ),
         child: Padding(
           padding: new EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -125,7 +151,7 @@ class _LoginState extends State<Login> {
               ),
               GestureDetector(
                 onTap: (){
-                  Navigator.push(context,
+                  Navigator.pushReplacement(context,
                       MaterialPageRoute(
                         builder: (BuildContext context) => const Register(),
                       ));

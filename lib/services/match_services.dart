@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'globals.dart';
 
@@ -8,7 +7,7 @@ class MatchServices {
   static Future<http.Response> requestMatch(
   int? game,
   int? event,
-  String user,
+  int user,
   String caster,
   String team,
   String enemy,
@@ -39,19 +38,148 @@ class MatchServices {
     return response;
   }
 
-  static Future<http.Response> detailMatch(int? id, int? game, int? event) async {
+  static Future<http.Response> comments(int match) async {
     Map data = {
-      'id':id,
-      'game':game,
-      'event':event
+      'match':match,
     };
     var body = json.encode(data);
-    var url = Uri.parse(baseURL + 'match/detail');
+    var url = Uri.parse(baseURL + 'match/comments');
     http.Response response = await http.post(
       url,
       headers: headers,
       body: body,
     );
     return response;
-}
+  }
+
+  static Future<http.Response> comment(String content, String user, int match) async {
+    Map data = {
+      'match':match,
+      'content':content,
+      'user':user
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/comment');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> acceptCaster(int match) async {
+    Map data = {
+      'match':match
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/acceptCaster');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> accept(int match, String username) async {
+    Map data = {
+      'match':match,
+      'username':username
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/accept');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> cancel(int match) async {
+    Map data = {
+      'match':match
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/cancel');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> payed(int match) async {
+    Map data = {
+      'match':match
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/payed');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> setRequest(int match, String username) async {
+    Map data = {
+      'match':match,
+      'username':username
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/setRequested');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> denieCast(int match) async {
+    Map data = {
+      'match':match
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/denieCast');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> payedMatch(int match) async {
+    Map data = {
+      'match':match
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/payedMatches');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
+
+  static Future<http.Response> decline(int match, String username) async {
+    Map data = {
+      'match':match,
+      'username':username
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'match/decline');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
+    return response;
+  }
 }

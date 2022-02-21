@@ -17,7 +17,22 @@ class DashboardService {
       headers: headers,
       body: body,
     );
-    print(response.body);
+    return response;
+  }
+
+  static Future<http.Response> casterDashboard(
+      String username
+      ) async {
+    Map data = {
+      "username":username,
+    };
+    var body = json.encode(data);
+    var url = Uri.parse(baseURL + 'auth/casterDashboard');
+    http.Response response = await http.post(
+      url,
+      headers: headers,
+      body: body,
+    );
     return response;
   }
 }

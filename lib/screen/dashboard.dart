@@ -1,14 +1,9 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:async/async.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:justcast_app/class/caster.dart';
 import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
 import 'package:justcast_app/screen/add_new_match.dart';
@@ -18,6 +13,8 @@ import 'package:justcast_app/services/globals.dart';
 import 'package:justcast_app/class/match.dart';
 import 'package:justcast_app/services/navigation_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:justcast_app/widget/change_theme_button_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -32,15 +29,14 @@ class _DashboardState extends State<Dashboard> {
   List<Match> _matches = [];
   List<Game> _games = [];
   List<Event> _events = [];
-  List<Caster> _casters = [];
   int index = 0;
+  var i = 1;
   AsyncMemoizer _memoizer = AsyncMemoizer();
 
   @override
   void initState() {
     getGameData();
     getEventData();
-    getCasterData();
     initializeDateFormatting('de_DE', null);
     super.initState();
   }
@@ -106,51 +102,59 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  Future getCasterData() async {
-    http.Response response = await DashboardService.dashboard(userAuth);
-    if (response.statusCode == 200) {
-      Map<String, dynamic> map = jsonDecode(response.body);
-      List<dynamic> jsonData = map['casters'];
-      for (var c in jsonData) {
-        Caster caster = Caster(c['id'], c['username']);
-        _casters.add(caster);
-      }
-      return _casters;
-    }else {
-      throw Exception('Daten konnten nicht geladen werden');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
+        iconTheme: Theme.of(context).iconTheme,
+        backgroundColor: Theme.of(context).backgroundColor,
         title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.network('https://www.justcast.org/images/logo.png',
-              fit: BoxFit.contain,
-              height: 46,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () async {
+                  launch('https://discord.gg/WYfmfzskwr');
+                },
+                icon: Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
+              ),
+              const SizedBox(
+                width: 50,
+              ),
+              Image.asset(
+                isDarkMode
+                    ? 'assets/images/logo_white.png'
+                    : 'assets/images/logo_black.png',
+                fit: BoxFit.contain,
+                height: 80,
+              ),
+              ]
             ),
-          ],
-        ),
         actions: [
           PopupMenuButton(
             itemBuilder: (context) {
               return [
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: Text("Meine Anfragen"),
+                if(isCaster == true)
+                  const PopupMenuItem<int>(
+                  value: 4,
+                  child: Text("Zu übertragende Spiele"),
                 ),
-                PopupMenuItem<int>(
+                const PopupMenuItem<int>(
                   value: 1,
                   child: Text("Mein Profil"),
                 ),
                 PopupMenuItem<int>(
                   value: 2,
-                  child: Text("Optionen"),
+                  child: Column(
+                      children: [
+                        ChangeThemeButtonWidget(),
+                      ]
+                  ),
                 ),
-                PopupMenuItem<int>(
+                const PopupMenuItem<int>(
                   value: 3,
                   child: Text("Logout"),
                 ),
@@ -159,10 +163,12 @@ class _DashboardState extends State<Dashboard> {
             onSelected: (value) {
               if(value == 0) {
                 NavigationService.onPressedDashboard(context);
+              }else if(value == 4) {
+                NavigationService.onPressedCasterDashboard(context);
               }else if(value == 1) {
-                print("Mein Profil");
+                NavigationService.onPressedProfile(context);
               }else if(value == 2) {
-                print("Optionen ausgewählt");
+                ;
               }else if(value == 3) {
                 userAuth = "";
                 NavigationService.onPressedLogout(context);
@@ -181,7 +187,7 @@ class _DashboardState extends State<Dashboard> {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: const Color(0xFAFAF8EB),
+                    color: Theme.of(context).primaryColor,
                     ),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -205,86 +211,139 @@ class _DashboardState extends State<Dashboard> {
                             children: [ FutureBuilder(
                               future: this._memoizer.runOnce(() => getMatches()),
                               builder: (context, AsyncSnapshot snapshot){
-                                if(snapshot.data != null) {
-                                 return ListView.builder(
-                                     physics: const NeverScrollableScrollPhysics(),
-                                     scrollDirection: Axis.vertical,
-                                     shrinkWrap: true,
-                                     itemCount: _matches.length,
-                                     itemBuilder: (context, i) {
-                                         return Card(
-                                              color: (_matches[i].status == 'accepted') ? Colors.greenAccent[700] : Colors.blueGrey[50],
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10),
+                                if(_matches.isNotEmpty) {
+                                  if (snapshot.data != null) {
+                                    return ListView.builder(
+                                        physics: const NeverScrollableScrollPhysics(),
+                                        scrollDirection: Axis.vertical,
+                                        shrinkWrap: true,
+                                        itemCount: _matches.length,
+                                        itemBuilder: (context, i) {
+                                          return Card(
+                                            color: (_matches[i].status ==
+                                                'accepted') ? Colors
+                                                .greenAccent[700] : Theme
+                                                .of(context)
+                                                .primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius
+                                                  .circular(10),
+                                            ),
+                                            child: ListTile(
+                                              leading: CircleAvatar(
+                                                backgroundImage: AssetImage(
+                                                  ('assets/images/games/' +
+                                                      _matches[i].game
+                                                          .toString() + '.png'),
+                                                ),
                                               ),
-                                              child: ListTile(
-                                                leading: CircleAvatar(
-                                                  backgroundImage: AssetImage(
-                                                    ('assets/images/games/'+_matches[i].game.toString()+'.png'),
-                                                ),
-                                                ),
-                                                title: TextButton(
-                                                    style: TextButton.styleFrom(
-                                                      textStyle: const TextStyle(
-                                                          fontSize: 15,
-                                                      ),
+                                              title: TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    textStyle: const TextStyle(
+                                                      fontSize: 15,
                                                     ),
-                                                    onPressed: () {
-                                                      Navigator.pushReplacement(context,
-                                                      MaterialPageRoute(
-                                                          builder: (BuildContext context) => DetailMatch(id: _matches[i].id, event: _matches[i].event, game: _matches[i].game)
+                                                  ),
+                                                  onPressed: () {
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (
+                                                                context) =>
+                                                                DetailMatch(
+                                                                    match: _matches[i],
+                                                                    game: _games[_matches[i]
+                                                                        .game -
+                                                                        1],
+                                                                    event: _events[_matches[i]
+                                                                        .event])
                                                         ));
-                                                    },
-                                                    child: Align(
-                                                      alignment: Alignment.center,
-                                                    child: Text(
-                                                        _matches[i].team + '\n vs. ' + '\n'+_matches[i].enemy,
-                                                      textAlign: TextAlign.center,
-                                                      style: const TextStyle(
-                                                        decoration: TextDecoration.underline,
-                                                      color: Colors.black,
-                                                    ),
-                                                    ))),
-                                                subtitle:
-                                                    Column(
-                                                      children: [Row(
-                                                        mainAxisAlignment: MainAxisAlignment.start,
-                                                        children: [
-                                                        CircleAvatar(
-                                                          radius: 12,
-                                                          backgroundImage: AssetImage(
-                                                          ('assets/images/events/'+_matches[i].game.toString()+'/'+_matches[i].event.toString()+'.png'),
+                                                  },
+                                                  child: Align(
+                                                      alignment: Alignment
+                                                          .center,
+                                                      child: Text(
+                                                        _matches[i].team +
+                                                            '\n vs. ' + '\n' +
+                                                            _matches[i].enemy,
+                                                        textAlign: TextAlign
+                                                            .center,
+                                                        style: TextStyle(
+                                                          decoration: TextDecoration
+                                                              .underline,
+                                                          color: (_matches[i]
+                                                              .status ==
+                                                              'accepted')
+                                                              ? Colors.black
+                                                              : Colors.blue
+                                                              .shade600,
                                                         ),
+                                                      ))),
+                                              subtitle:
+                                              Column(
+                                                children: [Row(
+                                                    mainAxisAlignment: MainAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      CircleAvatar(
+                                                        radius: 12,
+                                                        backgroundImage: AssetImage(
+                                                          ('assets/images/events/' +
+                                                              _matches[i].game
+                                                                  .toString() +
+                                                              '/' +
+                                                              _matches[i].event
+                                                                  .toString() +
+                                                              '.png'),
                                                         ),
-                                                        Text(' '+_events[snapshot.data[i].event].name,
+                                                      ),
+                                                      Text(' ' +
+                                                          _events[_matches[i]
+                                                              .event - 2].name,
                                                           style: const TextStyle(
-                                                          fontSize: 12,
-                                                        )
-                                                        ),
-                                                        ]
+                                                            fontSize: 12,
+                                                          )
                                                       ),
-                                                       Row(
-                                                         mainAxisAlignment: MainAxisAlignment.start,
-                                                        children: [
-                                                        Icon(
-                                                          Icons.access_time
-                                                        ),
-                                                        Text(' '+
-                                                        DateFormat('EEEE, dd.MM.yyyy HH:mm', 'de_DE').format(DateTime.parse(_matches[i].scheduledFor))+ ' Uhr',
-                                                        style: const TextStyle(
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                    ],
-                                                    ),
-                                                ],
+                                                    ]
                                                 ),
-                                           ),
-                                         );
-                                     }
-                                 );
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment
+                                                        .start,
+                                                    children: [
+                                                      const Icon(
+                                                          Icons.access_time
+                                                      ),
+                                                      Text(' ' +
+                                                          DateFormat(
+                                                              'EEEE, dd.MM.yyyy HH:mm',
+                                                              'de_DE').format(
+                                                              DateTime.parse(
+                                                                  _matches[i]
+                                                                      .scheduledFor)) +
+                                                          ' Uhr',
+                                                        style: const TextStyle(
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                    );
+                                  }
+                                  else {
+                                    return const Text('Lädt....');
+                                  }
                                 }
-                                else {return const Text('Lädt....');}
+                                else {return Card(
+                                  color: Theme.of(context).primaryColor,
+                                  shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                    child: Text('Du hast noch keine Spiele angefragt!'),));}
                               },
                             )
               ]
@@ -295,8 +354,8 @@ class _DashboardState extends State<Dashboard> {
                         Align(
                           alignment: Alignment.bottomRight,
                           child: Ink(
-                          decoration: const ShapeDecoration(
-                          color: Colors.white,
+                          decoration: ShapeDecoration(
+                          color: Theme.of(context).backgroundColor,
                           shape: CircleBorder()),
                             child: IconButton(
                               iconSize: 35,

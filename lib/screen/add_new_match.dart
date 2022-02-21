@@ -1,12 +1,11 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:justcast_app/class/caster.dart';
 import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
-import 'package:justcast_app/rounded_button.dart';
+import 'package:justcast_app/widget/change_theme_button_widget.dart';
+import 'package:justcast_app/widget/rounded_button.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:justcast_app/screen/dashboard.dart';
 import 'package:justcast_app/services/globals.dart';
@@ -14,6 +13,7 @@ import 'package:justcast_app/services/match_services.dart';
 import 'package:justcast_app/services/navigation_service.dart';
 import 'package:smart_select/smart_select.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 
 class AddNewMatch extends StatefulWidget {
@@ -31,7 +31,6 @@ class _AddNewMatchState extends State<AddNewMatch> {
   String _enemy= "";
   String _matchlink = "";
   String _infos = "";
-  final String _user = userAuth;
   DateTime _scheduledfor = DateTime.now();
   bool _isexclusive = false;
   var url = Uri.parse(baseURL+'request');
@@ -86,7 +85,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
         Map<String, dynamic> map = jsonDecode(response.body);
         List<dynamic> jsonData = map['casters'];
         for (var c in jsonData) {
-          Caster caster = Caster(c['id'], c['username']);
+          Caster caster = Caster(c['id'], c['username'], c['chargeable']);
           casterList.add(
               S2Choice<String>(value: caster.id.toString(), title: caster.username));
         }
@@ -97,7 +96,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
   }
 
   requestMatchPressed() async {
-    http.Response response = await MatchServices.requestMatch(int.tryParse(_game), int.tryParse(_event), _user, _caster, _team, _enemy, _matchlink, _infos, _scheduledfor, _isexclusive);
+    http.Response response = await MatchServices.requestMatch(int.tryParse(_game), int.tryParse(_event), userId, _caster, _team, _enemy, _matchlink, _infos, _scheduledfor, _isexclusive);
     Map responseMap = jsonDecode(response.body);
     if(response.statusCode==200){
       Navigator.pushReplacement(context,
@@ -110,34 +109,61 @@ class _AddNewMatchState extends State<AddNewMatch> {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         appBar: AppBar(
+          iconTheme: Theme.of(context).iconTheme,
+          backgroundColor: Theme.of(context).backgroundColor,
           title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.network('https://www.justcast.org/images/logo.png',
-                fit: BoxFit.contain,
-                height: 46,
-              ),
-            ],
-          ),
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    launch('https://discord.gg/WYfmfzskwr');
+                  },
+                  icon: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
+                ),
+                const SizedBox(
+                  width: 50,
+                ),
+                Image.asset(
+                  isDarkMode
+                      ? 'assets/images/logo_white.png'
+                      : 'assets/images/logo_black.png',
+                  fit: BoxFit.contain,
+                  height: 80,
+                ),
+                    ]
+                ),
           actions: [
             PopupMenuButton(
               itemBuilder: (context) {
                 return [
-                  PopupMenuItem<int>(
+                  const PopupMenuItem<int>(
                     value: 0,
                     child: Text("Meine Anfragen"),
                   ),
-                  PopupMenuItem<int>(
+                  if(isCaster == true)
+                    const PopupMenuItem<int>(
+                      value: 4,
+                      child: Text("Angefragte Spiele"),
+                    ),
+                  const PopupMenuItem<int>(
                     value: 1,
                     child: Text("Mein Profil"),
                   ),
                   PopupMenuItem<int>(
                     value: 2,
-                    child: Text("Optionen"),
+                    child: Column(
+                        children: [
+                          ChangeThemeButtonWidget(),
+                        ]
+                    ),
                   ),
-                  PopupMenuItem<int>(
+                  const PopupMenuItem<int>(
                     value: 3,
                     child: Text("Logout"),
                   ),
@@ -145,14 +171,16 @@ class _AddNewMatchState extends State<AddNewMatch> {
               },
               onSelected: (value) {
                 if(value == 0) {
-                  NavigationService.onPressedDashboard(this.context);
+                  NavigationService.onPressedDashboard(context);
+                }else if(value == 4) {
+                  NavigationService.onPressedCasterDashboard(context);
                 }else if(value == 1) {
-                  print("Mein Profil");
+                  NavigationService.onPressedProfile(context);
                 }else if(value == 2) {
-                  print("Optionen ausgewählt");
+                  ;
                 }else if(value == 3) {
                   userAuth = "";
-                  NavigationService.onPressedLogout(this.context);
+                  NavigationService.onPressedLogout(context);
                 }
               },
             ),
@@ -164,7 +192,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
               child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
-                    color: const Color(0xFAFAF8EB),
+                    color: Theme.of(context).primaryColor,
                   ),
                   child: Padding(
                       padding: new EdgeInsets.symmetric(horizontal: 20, vertical: 15),
@@ -185,10 +213,10 @@ class _AddNewMatchState extends State<AddNewMatch> {
                                   value: _game,
                                   choiceItems: gameList,
                                   onChange: (state) => setState(() => _game = state.value.toString() ),
-                                  modalConfig: S2ModalConfig(
+                                  modalConfig: const S2ModalConfig(
                                     type: S2ModalType.bottomSheet,
                                   ),
-                                  modalStyle: S2ModalStyle(
+                                  modalStyle: const S2ModalStyle(
                                     backgroundColor: Colors.white
                                   )
                           ),
@@ -197,10 +225,10 @@ class _AddNewMatchState extends State<AddNewMatch> {
                                 value: _event,
                                 choiceItems: eventList,
                                 onChange: (state) => setState(() => _event = state.value.toString()),
-                                modalConfig: S2ModalConfig(
+                                modalConfig: const S2ModalConfig(
                                 type: S2ModalType.bottomSheet,
                                 ),
-                                modalStyle: S2ModalStyle(
+                                modalStyle: const S2ModalStyle(
                                     backgroundColor: Colors.white
                                 )
                           ),
@@ -250,7 +278,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
                                       print('confirm $date');
                                     }, currentTime: DateTime.now(), locale: LocaleType.de);
                               },
-                              child: Text(
+                              child: const Text(
                                 'Datum und Uhrzeit auswählen',
                                 style: TextStyle(
                                     color: Colors.blue,
@@ -266,10 +294,10 @@ class _AddNewMatchState extends State<AddNewMatch> {
                                 value: _caster,
                                 choiceItems: casterList,
                                 onChange: (state) => setState(() => _caster = state.value.toString()),
-                                modalConfig: S2ModalConfig(
+                                modalConfig: const S2ModalConfig(
                                   type: S2ModalType.bottomSheet,
                                 ),
-                                modalStyle: S2ModalStyle(
+                                modalStyle: const S2ModalStyle(
                                     backgroundColor: Colors.white
                                 )
                           ),
@@ -285,7 +313,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
                               });
                              }
                           ),
-                            Text(
+                            const Text(
                                 'Exklusiver Cast'
                             ),
                             ],
