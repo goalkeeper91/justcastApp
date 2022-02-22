@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:justcast_app/screen/agb.dart';
+import 'package:justcast_app/screen/datasecure.dart';
+import 'package:justcast_app/screen/impressum.dart';
 import 'package:justcast_app/widget/change_theme_button_widget.dart';
 import 'package:justcast_app/widget/rounded_button.dart';
 import 'package:justcast_app/screen/dashboard.dart';
@@ -84,7 +87,7 @@ class _LoginState extends State<Login> {
                       value: 0,
                       child: Column(
                         children: [
-                           ChangeThemeButtonWidget(),
+                           const ChangeThemeButtonWidget(),
                         ]
                       ),
                     ),
@@ -106,7 +109,7 @@ class _LoginState extends State<Login> {
               color: Theme.of(context).primaryColor,
             ),
         child: Padding(
-          padding: new EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
             child: Column(
               children: [
               const Text(
@@ -162,13 +165,57 @@ class _LoginState extends State<Login> {
                     decoration: TextDecoration.underline,
                   ),
                 ),
-              )
+              ),
             ],
           ),
-        )
-        )
-        )
-        )
+        ),
+        ),
+        ),
+        ),
+        persistentFooterButtons: [
+          GestureDetector(
+            onTap: (){
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => const AGB(),
+                  ));
+            },
+            child:  const Text(
+              'AGB',
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: (){
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => const DataSecure(),
+                  ));
+            },
+            child:  const Text(
+              'Datenschutz',
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+          GestureDetector(
+            onTap: (){
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(
+                    builder: (BuildContext context) => const Impressum(),
+                  ));
+            },
+            child:  const Text(
+              'Impressum',
+              style: TextStyle(
+                decoration: TextDecoration.underline,
+              ),
+            ),
+          ),
+      ],
     );
   }
 }

@@ -7,7 +7,10 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
 import 'package:justcast_app/screen/add_new_match.dart';
+import 'package:justcast_app/screen/agb.dart';
+import 'package:justcast_app/screen/datasecure.dart';
 import 'package:justcast_app/screen/detail_match.dart';
+import 'package:justcast_app/screen/impressum.dart';
 import 'package:justcast_app/services/dashboard_service.dart';
 import 'package:justcast_app/services/globals.dart';
 import 'package:justcast_app/class/match.dart';
@@ -100,6 +103,18 @@ class _DashboardState extends State<Dashboard> {
     }else {
       throw Exception('Daten konnten nicht geladen werden');
     }
+  }
+
+  detailMatch(int i) {
+    var j = 0;
+    if(_matches[i].event < 8){
+      j = 1;
+    }else if(_matches[i].event > 8){
+      j = 2;
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) => DetailMatch(match: _matches[i],game: _games[_matches[i].game-1],event: _events[_matches[i].event-j])
+    ));
   }
 
   @override
@@ -243,21 +258,7 @@ class _DashboardState extends State<Dashboard> {
                                                       fontSize: 15,
                                                     ),
                                                   ),
-                                                  onPressed: () {
-                                                    Navigator.pushReplacement(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (
-                                                                context) =>
-                                                                DetailMatch(
-                                                                    match: _matches[i],
-                                                                    game: _games[_matches[i]
-                                                                        .game -
-                                                                        1],
-                                                                    event: _events[_matches[i]
-                                                                        .event])
-                                                        ));
-                                                  },
+                                                  onPressed: () => detailMatch(i),
                                                   child: Align(
                                                       alignment: Alignment
                                                           .center,
@@ -296,13 +297,18 @@ class _DashboardState extends State<Dashboard> {
                                                               '.png'),
                                                         ),
                                                       ),
-                                                      Text(' ' +
-                                                          _events[_matches[i]
-                                                              .event - 2].name,
-                                                          style: const TextStyle(
-                                                            fontSize: 12,
-                                                          )
-                                                      ),
+                                                      if(_matches[i].event < 8)
+                                                        Text(' '+_events[_matches[i].event-1].name,
+                                                            style: const TextStyle(
+                                                              fontSize: 12,
+                                                            )
+                                                        ),
+                                                      if(_matches[i].event > 8)
+                                                        Text(' '+_events[_matches[i].event-2].name,
+                                                            style: const TextStyle(
+                                                              fontSize: 12,
+                                                            )
+                                                        ),
                                                     ]
                                                 ),
                                                   Row(
@@ -372,6 +378,50 @@ class _DashboardState extends State<Dashboard> {
     ),
     ),
       ),
+      persistentFooterButtons: [
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AGB(),
+                ));
+          },
+          child:  const Text(
+            'AGB',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const DataSecure(),
+                ));
+          },
+          child:  const Text(
+            'Datenschutz',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const Impressum(),
+                ));
+          },
+          child:  const Text(
+            'Impressum',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

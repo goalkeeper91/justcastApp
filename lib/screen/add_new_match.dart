@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:justcast_app/class/caster.dart';
 import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
+import 'package:justcast_app/screen/agb.dart';
+import 'package:justcast_app/screen/datasecure.dart';
+import 'package:justcast_app/screen/impressum.dart';
 import 'package:justcast_app/widget/change_theme_button_widget.dart';
 import 'package:justcast_app/widget/rounded_button.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -273,9 +276,8 @@ class _AddNewMatchState extends State<AddNewMatch> {
                                     showTitleActions: true,
                                     minTime: DateTime(2018, 3, 5),
                                     maxTime: DateTime(2019, 6, 7), onChanged: (date) {
-                                      print('change $date');
                                     }, onConfirm: (date) {
-                                      print('confirm $date');
+                                      _scheduledfor = date;
                                     }, currentTime: DateTime.now(), locale: LocaleType.de);
                               },
                               child: const Text(
@@ -343,7 +345,51 @@ class _AddNewMatchState extends State<AddNewMatch> {
                   )
               ),
             )
-        )
+        ),
+      persistentFooterButtons: [
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AGB(),
+                ));
+          },
+          child:  const Text(
+            'AGB',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const DataSecure(),
+                ));
+          },
+          child:  const Text(
+            'Datenschutz',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const Impressum(),
+                ));
+          },
+          child:  const Text(
+            'Impressum',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

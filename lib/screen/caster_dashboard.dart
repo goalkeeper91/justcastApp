@@ -6,7 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
+import 'package:justcast_app/screen/agb.dart';
+import 'package:justcast_app/screen/datasecure.dart';
 import 'package:justcast_app/screen/detail_match.dart';
+import 'package:justcast_app/screen/impressum.dart';
 import 'package:justcast_app/services/dashboard_service.dart';
 import 'package:justcast_app/services/globals.dart';
 import 'package:justcast_app/class/match.dart';
@@ -172,6 +175,42 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
     }
   }
 
+  detailMatchA(int i) {
+    var j = 0;
+    if(_acceptedMatches[i].event < 8){
+     j = 1;
+    }else if(_acceptedMatches[i].event > 8){
+     j = 2;
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) => DetailMatch(match: _acceptedMatches[i],game: _games[_acceptedMatches[i].game-1],event: _events[_acceptedMatches[i].event-j])
+    ));
+  }
+
+  detailMatchF(int i) {
+    var j = 0;
+    if(_filteredMatches[i].event < 8){
+      j = 1;
+    }else if(_filteredMatches[i].event > 8){
+      j = 2;
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) => DetailMatch(match: _filteredMatches[i],game: _games[_filteredMatches[i].game-1],event: _events[_filteredMatches[i].event-j])
+    ));
+  }
+
+  detailMatchR(int i) {
+    var j = 0;
+    if(_requestedMatches[i].event < 8){
+      j = 1;
+    }else if(_requestedMatches[i].event > 8){
+      j = 2;
+    }
+    Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (context) => DetailMatch(match: _requestedMatches[i],game: _games[_requestedMatches[i].game-1],event: _events[_requestedMatches[i].event-j])
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 3, vsync: this);
@@ -322,11 +361,7 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
                                               fontSize: 15,
                                               ),
                                             ),
-                                              onPressed: (){
-                                              Navigator.pushReplacement(context, MaterialPageRoute(
-                                              builder: (context) => DetailMatch(match: _acceptedMatches[i],game: _games[_acceptedMatches[i].game-1],event: _events[_acceptedMatches[i].event])
-                                              ));
-                                            },
+                                              onPressed: () => detailMatchA(i),
                                               child: Align(
                                               alignment: Alignment.center,
                                                 child: Text(
@@ -450,11 +485,7 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
                                                             fontSize: 15,
                                                           ),
                                                         ),
-                                                        onPressed: (){
-                                                          Navigator.pushReplacement(context, MaterialPageRoute(
-                                                              builder: (context) => DetailMatch(match: _filteredMatches[i],game: _games[_filteredMatches[i].game-1],event: _events[_filteredMatches[i].event])
-                                                          ));
-                                                        },
+                                                        onPressed: () => detailMatchF(i),
                                                         child: Align(
                                                             alignment: Alignment.center,
                                                             child: Text(
@@ -578,11 +609,7 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
                                                             fontSize: 15,
                                                           ),
                                                         ),
-                                                        onPressed: (){
-                                                          Navigator.pushReplacement(context, MaterialPageRoute(
-                                                              builder: (context) => DetailMatch(match: _requestedMatches[i],game: _games[_requestedMatches[i].game-1],event: _events[_requestedMatches[i].event])
-                                                          ));
-                                                        },
+                                                        onPressed: () => detailMatchR(i),
                                                         child: Align(
                                                             alignment: Alignment.center,
                                                             child: Text(
@@ -605,11 +632,18 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
                                                                   ('assets/images/events/'+_requestedMatches[i].game.toString()+'/'+_requestedMatches[i].event.toString()+'.png'),
                                                                 ),
                                                               ),
-                                                              Text(' '+_events[_requestedMatches[i].event-2].name,
+                                                              if(_requestedMatches[i].event < 8)
+                                                              Text(' '+_events[_requestedMatches[i].event-1].name,
                                                                   style: const TextStyle(
                                                                     fontSize: 12,
                                                                   )
                                                               ),
+                                                              if(_requestedMatches[i].event > 8)
+                                                                Text(' '+_events[_requestedMatches[i].event-2].name,
+                                                                    style: const TextStyle(
+                                                                      fontSize: 12,
+                                                                    )
+                                                                ),
                                                             ]
                                                         ),
                                                         Row(
@@ -659,6 +693,50 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
             ),
           ]
       ),
+      persistentFooterButtons: [
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AGB(),
+                ));
+          },
+          child:  const Text(
+            'AGB',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const DataSecure(),
+                ));
+          },
+          child:  const Text(
+            'Datenschutz',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const Impressum(),
+                ));
+          },
+          child:  const Text(
+            'Impressum',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
       );
   }
 }

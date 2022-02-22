@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:justcast_app/screen/agb.dart';
+import 'package:justcast_app/screen/datasecure.dart';
+import 'package:justcast_app/screen/impressum.dart';
 import 'package:justcast_app/services/globals.dart';
 import 'package:justcast_app/services/navigation_service.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -139,7 +142,51 @@ class _OptionState extends State<Option> {
                     )
                 )
             )
-        )
+        ),
+      persistentFooterButtons: [
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AGB(),
+                ));
+          },
+          child:  const Text(
+            'AGB',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const DataSecure(),
+                ));
+          },
+          child:  const Text(
+            'Datenschutz',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const Impressum(),
+                ));
+          },
+          child:  const Text(
+            'Impressum',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:justcast_app/screen/agb.dart';
+import 'package:justcast_app/screen/datasecure.dart';
+import 'package:justcast_app/screen/impressum.dart';
 import 'package:justcast_app/widget/change_theme_button_widget.dart';
 import 'package:justcast_app/widget/rounded_button.dart';
 import 'package:justcast_app/screen/dashboard.dart';
@@ -188,7 +191,51 @@ class _RegisterState extends State<Register> {
           )
         ),
       )
-      )
+      ),
+      persistentFooterButtons: [
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AGB(),
+                ));
+          },
+          child:  const Text(
+            'AGB',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const DataSecure(),
+                ));
+          },
+          child:  const Text(
+            'Datenschutz',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const Impressum(),
+                ));
+          },
+          child:  const Text(
+            'Impressum',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:justcast_app/class/appColors.dart';
+import 'package:justcast_app/screen/agb.dart';
 import 'package:justcast_app/screen/dashboard.dart';
+import 'package:justcast_app/screen/datasecure.dart';
+import 'package:justcast_app/screen/impressum.dart';
 import 'package:justcast_app/screen/login.dart';
 import 'package:justcast_app/services/auth_services.dart';
 import 'package:justcast_app/services/globals.dart';
@@ -275,7 +278,51 @@ class _ProfileState extends State<Profile> {
                     )
                 )
             )
-        )
+        ),
+      persistentFooterButtons: [
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const AGB(),
+                ));
+          },
+          child:  const Text(
+            'AGB',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const DataSecure(),
+                ));
+          },
+          child:  const Text(
+            'Datenschutz',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: (){
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(
+                  builder: (BuildContext context) => const Impressum(),
+                ));
+          },
+          child:  const Text(
+            'Impressum',
+            style: TextStyle(
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
