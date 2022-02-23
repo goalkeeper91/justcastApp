@@ -33,13 +33,13 @@ class _DashboardState extends State<Dashboard> {
   List<Game> _games = [];
   List<Event> _events = [];
   int index = 0;
-  var i = 1;
+  var k = 0;
   AsyncMemoizer _memoizer = AsyncMemoizer();
 
   @override
   void initState() {
-    getGameData();
     getEventData();
+    getGameData();
     initializeDateFormatting('de_DE', null);
     super.initState();
   }
@@ -105,15 +105,15 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-  detailMatch(int i) {
+  detailMatch(int k) {
     var j = 0;
-    if(_matches[i].event < 8){
+    if(_matches[k].event < 8){
       j = 1;
-    }else if(_matches[i].event > 8){
+    }else if(_matches[k].event > 8){
       j = 2;
     }
     Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (context) => DetailMatch(match: _matches[i],game: _games[_matches[i].game-1],event: _events[_matches[i].event-j])
+        builder: (context) => DetailMatch(match: _matches[k],game: _games[_matches[k].game-1],event: _events[_matches[k].event-j])
     ));
   }
 
@@ -192,191 +192,185 @@ class _DashboardState extends State<Dashboard> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Theme.of(context).primaryColor,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                      child: Column(
-                        children: const [
-                          Text(
-                            'Meine Anfragen',
-                            style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          ]
+      body: RefreshIndicator(
+        onRefresh: getMatches,
+        child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Theme.of(context).primaryColor,
                       ),
-                    ),
-              ),
-                        const SizedBox(
-                          height:  5,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        child: Column(
+                          children: const [
+                            Text(
+                              'Meine Anfragen',
+                              style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            ]
                         ),
-                        Column(
-                            children: [ FutureBuilder(
-                              future: this._memoizer.runOnce(() => getMatches()),
-                              builder: (context, AsyncSnapshot snapshot){
-                                if(_matches.isNotEmpty) {
-                                  if (snapshot.data != null) {
-                                    return ListView.builder(
-                                        physics: const NeverScrollableScrollPhysics(),
-                                        scrollDirection: Axis.vertical,
-                                        shrinkWrap: true,
-                                        itemCount: _matches.length,
-                                        itemBuilder: (context, i) {
-                                          return Card(
-                                            color: (_matches[i].status ==
-                                                'accepted') ? Colors
-                                                .greenAccent[700] : Theme
-                                                .of(context)
-                                                .primaryColor,
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius
-                                                  .circular(10),
-                                            ),
-                                            child: ListTile(
-                                              leading: CircleAvatar(
-                                                backgroundImage: AssetImage(
-                                                  ('assets/images/games/' +
-                                                      _matches[i].game
-                                                          .toString() + '.png'),
-                                                ),
-                                              ),
-                                              title: TextButton(
-                                                  style: TextButton.styleFrom(
-                                                    textStyle: const TextStyle(
-                                                      fontSize: 15,
+                      ),
+                ),
+                          const SizedBox(
+                            height:  5,
+                          ),
+                        Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                            child: Column(
+                                children: [ FutureBuilder(
+                                  future: this._memoizer.runOnce(() => getMatches()),
+                                  builder: (context, AsyncSnapshot snapshot){
+                                    if(_matches.isNotEmpty) {
+                                        return ListView.builder(
+                                                  physics: const NeverScrollableScrollPhysics(),
+                                                  scrollDirection: Axis.vertical,
+                                                  shrinkWrap: true,
+                                                  itemCount: _matches.length,
+                                                  itemBuilder: (context, i) {
+                                                  return Card(
+                                                  color: (_matches[i].status ==
+                                                      'accepted') ? Colors
+                                                      .greenAccent[700] : Theme
+                                                      .of(context)
+                                                      .primaryColor,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius
+                                                        .circular(10),
+                                                  ),
+                                                  child: ListTile(
+                                                    leading: CircleAvatar(
+                                                      backgroundImage: AssetImage(
+                                                        ('assets/images/games/' +
+                                                            _matches[i].game
+                                                                .toString() + '.png'),
+                                                      ),
+                                                    ),
+                                                    title: TextButton(
+                                                        style: TextButton.styleFrom(
+                                                          textStyle: const TextStyle(
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                        onPressed: () => detailMatch(i),
+                                                        child: Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Text(
+                                                              _matches[i].team +
+                                                                  '\n vs. ' + '\n' +
+                                                                  _matches[i].enemy,
+                                                              textAlign: TextAlign
+                                                                  .center,
+                                                              style: TextStyle(
+                                                                decoration: TextDecoration
+                                                                    .underline,
+                                                                color: (_matches[i]
+                                                                    .status ==
+                                                                    'accepted')
+                                                                    ? Colors.black
+                                                                    : Colors.blue
+                                                                    .shade600,
+                                                              ),
+                                                            ))),
+                                                    subtitle:
+                                                    Column(
+                                                      children: [Row(
+                                                          mainAxisAlignment: MainAxisAlignment
+                                                              .start,
+                                                          children: [
+                                                            CircleAvatar(
+                                                              radius: 12,
+                                                              backgroundImage: AssetImage(
+                                                                ('assets/images/events/' +
+                                                                    _matches[i].game
+                                                                        .toString() +
+                                                                    '/' +
+                                                                    _matches[i].event
+                                                                        .toString() +
+                                                                    '.png'),
+                                                              ),
+                                                            ),
+                                                              Text(' '+_events.firstWhere((event) => event.id == _matches[i].event).name,
+                                                                  style: const TextStyle(
+                                                                    fontSize: 12,
+                                                                  )
+                                                              ),
+                                                          ]
+                                                      ),
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment
+                                                              .start,
+                                                          children: [
+                                                            const Icon(
+                                                                Icons.access_time
+                                                            ),
+                                                            Text(' ' +
+                                                                DateFormat(
+                                                                    'EEEE, dd.MM.yyyy HH:mm',
+                                                                    'de_DE').format(
+                                                                    DateTime.parse(
+                                                                        _matches[i]
+                                                                            .scheduledFor)) +
+                                                                ' Uhr',
+                                                              style: const TextStyle(
+                                                                fontSize: 12,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
-                                                  onPressed: () => detailMatch(i),
-                                                  child: Align(
-                                                      alignment: Alignment
-                                                          .center,
-                                                      child: Text(
-                                                        _matches[i].team +
-                                                            '\n vs. ' + '\n' +
-                                                            _matches[i].enemy,
-                                                        textAlign: TextAlign
-                                                            .center,
-                                                        style: TextStyle(
-                                                          decoration: TextDecoration
-                                                              .underline,
-                                                          color: (_matches[i]
-                                                              .status ==
-                                                              'accepted')
-                                                              ? Colors.black
-                                                              : Colors.blue
-                                                              .shade600,
-                                                        ),
-                                                      ))),
-                                              subtitle:
-                                              Column(
-                                                children: [Row(
-                                                    mainAxisAlignment: MainAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      CircleAvatar(
-                                                        radius: 12,
-                                                        backgroundImage: AssetImage(
-                                                          ('assets/images/events/' +
-                                                              _matches[i].game
-                                                                  .toString() +
-                                                              '/' +
-                                                              _matches[i].event
-                                                                  .toString() +
-                                                              '.png'),
-                                                        ),
-                                                      ),
-                                                      if(_matches[i].event < 8)
-                                                        Text(' '+_events[_matches[i].event-1].name,
-                                                            style: const TextStyle(
-                                                              fontSize: 12,
-                                                            )
-                                                        ),
-                                                      if(_matches[i].event > 8)
-                                                        Text(' '+_events[_matches[i].event-2].name,
-                                                            style: const TextStyle(
-                                                              fontSize: 12,
-                                                            )
-                                                        ),
-                                                    ]
-                                                ),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment
-                                                        .start,
-                                                    children: [
-                                                      const Icon(
-                                                          Icons.access_time
-                                                      ),
-                                                      Text(' ' +
-                                                          DateFormat(
-                                                              'EEEE, dd.MM.yyyy HH:mm',
-                                                              'de_DE').format(
-                                                              DateTime.parse(
-                                                                  _matches[i]
-                                                                      .scheduledFor)) +
-                                                          ' Uhr',
-                                                        style: const TextStyle(
-                                                          fontSize: 12,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                    );
-                                  }
-                                  else {
-                                    return const Text('Lädt....');
-                                  }
-                                }
-                                else {return Card(
-                                  color: Theme.of(context).primaryColor,
-                                  shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                    child: Text('Du hast noch keine Spiele angefragt!'),));}
-                              },
-                            )
-              ]
-                        ),
-                        const SizedBox(
-                          height: 30,
-                        ),
-                        Align(
-                          alignment: Alignment.bottomRight,
-                          child: Ink(
-                          decoration: ShapeDecoration(
-                          color: Theme.of(context).backgroundColor,
-                          shape: CircleBorder()),
-                            child: IconButton(
-                              iconSize: 35,
-                              onPressed: () {
-                              Navigator.pushReplacement(context,
-                              MaterialPageRoute(builder: (BuildContext context) => const AddNewMatch()
-                              ));
-                              },
-                              icon: const Icon(Icons.add)),
+                                                );
+                                              }
+                                        );
+                                    }
+                                    else {return Card(
+                                      color: Theme.of(context).primaryColor,
+                                      shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                        child: Text('Du hast noch keine Spiele angefragt!'),));}
+                                  },
+                                )
+                ]
+                            ),
+                      ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Ink(
+                            decoration: ShapeDecoration(
+                            color: Theme.of(context).backgroundColor,
+                            shape: const CircleBorder()),
+                              child: IconButton(
+                                iconSize: 35,
+                                onPressed: () {
+                                Navigator.pushReplacement(context,
+                                MaterialPageRoute(builder: (BuildContext context) => const AddNewMatch()
+                                ));
+                                },
+                                icon: const Icon(Icons.add)),
+                    ),
                   ),
-                ),
     ]
+                ),
               ),
     ),
-    ),
+        ),
       ),
       persistentFooterButtons: [
         GestureDetector(

@@ -62,8 +62,8 @@ class AGB extends StatelessWidget {
                   PopupMenuItem<int>(
                     value: 2,
                     child: Column(
-                        children: [
-                          const ChangeThemeButtonWidget(),
+                        children: const [
+                          ChangeThemeButtonWidget(),
                         ]
                     ),
                   ),
@@ -118,59 +118,76 @@ class AGB extends StatelessWidget {
                     height:  5,
                   ),
                   RichText(
-                      text: TextSpan(
+                      text: const TextSpan(
                           children: <TextSpan>[
-                            const TextSpan(text: 'Angaben gemäß § 5 TMG \n\n'),
-                            const TextSpan(text: 'JustCast\n', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: 'Inh.: Christian Steinbach\n'),
-                            const TextSpan(text: 'Stettener Weg 2\n'),
-                            const TextSpan(text: '89584 Ehingen\n\n'),
+                            TextSpan(text: '1. Anwendungsbereich\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: 'Gegenstand dieser AGB ist die Nutzung der JustCast IT Plattform, welche von der '
+                                'NextLevelNation Inh.: Christian Steinbach, nachfolgend NextLevelNation, betrieben wird. Die NextLevelNation '
+                                'stellt dem Endnutzer für die Dauer dieses Vertrages die Plattform in der jeweils aktuellen Version über das Internet '
+                                'unentgeltlich zur Nutzung zur Verfügung.\n\n'),
+                            TextSpan(text: 'Die Vertragsbeziehung zwischen der NextLevelNation und dem Endnutzer kommt mit der Registrierung eines '
+                                'Benutzeraccounts zustande. Mit der Registrierung erkennt der Endnutzer die vorliegende AGB ausdrücklich an.\n\n'),
+                            TextSpan(text: 'Allfällige Allgemeine Geschäftsbedingungen bzw. Allgemeine Einkaufsbedingungen des Endnutzer werden '
+                                'hiermit ausdrücklich ausgeschlossen, sofern sie von der NextLevelNation nicht ausdrücklich und schriftlich anerkannt werden.\n\n'),
 
-                            const TextSpan(text: 'Kontakt\n', style: TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: 'Telefon: 07391-7816405\n'),
-                            const TextSpan(text: 'E-Mail: team@justcast.org\n\n'),
+                            TextSpan(text: '2. Verantwortlichkeiten und Leistungen der NextLevelNation\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: 'Die NextLevelNation ist für den Betrieb der Plattform verantwortlich. Diese umfassen den zuverlässigen und '
+                                'sicheren Betrieb der technischen Infrastruktur, Installation und Instandhaltung der Software, Betrieb eines Backup-Systems, '
+                                'sowie die zur Aufrechterhaltung der Betriebstüchtigkeit erforderlichen Massnahmen.\n\n'),
 
-                            const TextSpan(text: 'Vertreten durch:', style: TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: 'Fabian Groß\n'),
-                            const TextSpan(text: 'Dorfstraße 13\n'),
-                            const TextSpan(text: '52076 Aachen\n\n'),
+                            TextSpan(text: '3. Verantwortlichkeiten des Endnutzer\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: 'Der Endnutzer bleibt abgesehen von der JustCast Plattform für den Betrieb, die Sicherheit und den Zustand '
+                                'seiner Website und allen weiteren elektronischen/digitalen Medien, auf denen die JustCast Plattform zum Einsatz kommt '
+                                'vollumfänglich verantwortlich (Hardware, Software, Betrieb, Sicherheit etc.). Der Endnutzer trägt sämtliche im Zusammenhang '
+                                'mit der Wahrnehmung seiner Verantwortlichkeiten entstehenden Kosten.\n\n'),
 
-                            const TextSpan(text: 'EU-Streitschlichtung', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: 'Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:'),
-                            TextSpan(text:'https://ec.europa.eu/consumers/odr.', style: const TextStyle(color: Colors.blue), recognizer: TapGestureRecognizer()
-                              ..onTap = () async {
-                                final url = 'https://ec.europa.eu/consumers/odr';
-                                if (await canLaunch(url)) {
-                                  await launch(
-                                    url,
-                                    forceSafariVC: false,
-                                  );
-                                }
-                              },
-                            ),
-                            const TextSpan(text: 'Unsere E-Mail-Adresse finden Sie oben im Impressum.\n\n'),
+                            TextSpan(text: '4. Systemverfügbarkeit\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: 'Die JustCast Plattform Leistungen werden nach "best effort" Grundsätzen erbracht. Die NextLevelNation '
+                                'ergreift die zumutbaren Massnahmen, um eine möglichst unterbrechungsfreie Nutzung der Plattform zu gewährleisten. Der Endnutzer '
+                                'ist sich jedoch bewusst, dass es sich bei den Leistungen und weiteren Komponenten von Drittpartnern, deren Funktionstüchtigkeit '
+                                'von der NextLevelNation nicht beeinflusst werden kann, um ein technisch komplexes System handelt, weshalb die NextLevelNation '
+                                'keine Garantie für die ständige und vollständige Verfügbarkeit dieser Komponenten übernehmen kann. Unterbrüche aufgrund von '
+                                'Systemwartungen, Updates etc.) im Voraus angekündigt, wobei bei planbaren Arbeiten eine Frist von 2 Arbeitstagen eingehalten wird. '
+                                'Unmittelbar notwendige Arbeiten, die einen Unterbruch in der Verfügbarkeit auslösen, können im Sinne einer schnellen Problembehebung '
+                                'oder Abwendung von Gefährdungspotential (z.B. Virenbefall) ohne Vorankündigung vorgenommen werden.\n\n'),
+                            TextSpan(text:'4.1. Gefährdung der Datensicherheit\nErkennt die NextLevelNation eine Gefährdung des ordnungsgemäßen Betriebs durch '
+                                'fahrlässige oder mutwillige Aktivitäten externer Urheber (DOS Attacken, Virenangriff u.ä.), ist die NextLevelNation befugt, '
+                                'umgehend alle notwendigen Schritte zu unternehmen, um die eigene Infrastruktur und Software vor Schaden zu bewahren.\n\n'),
 
-                            const TextSpan(text: 'Verbraucherstreitbeilegung/Universalschlichtungsstelle', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: 'Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.\n\n'),
+                            TextSpan(text: '5. Support\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: 'Der Support steht über den Discord Channel oder per E-Mail aus dem Impressum bereit.\n\n'),
 
-                            const TextSpan(text: 'Haftung für Inhalte', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: 'Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. '
-                                'Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen '
-                                'zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen '
-                                'Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. '
-                                'Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.\n\n'),
+                            TextSpan(text: '6. Datenschutz und Datensicherheit\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: 'Die NextLevelNation wird die Daten des Endnutzer mit höchster Sorgfalt behandeln und sie vor Missbrauch und '
+                                'Verlust schützen. Dazu trifft die NextLevelNation technische und organisatorische Massnahmen, welche mindestens den gültigen Anforderungen '
+                                'der DSGVO entsprechen. Die Daten werden in Europa gespeichert. I.d.R. in Deutschland. Spezielle Vereinbarungen zu Serverstandorten können '
+                                'im Rahmen von technischen Möglichkeiten getroffen werden.\n\n'),
+                            TextSpan(text: '6.1. Der Endnutzer ist für die Rechtmässigkeit der Datenweitergabe bzw. deren Verwendung verantwortlich. Alle von der NextLevelNation '
+                                'gespeicherten und bearbeiteten Daten des Endnutzer sind ausschliessliches Eigentum des Endnutzer und werden von der NextLevelNation ausschliesslich '
+                                'zu Zwecken der Vertragserfüllung genutzt.\n\n'),
+                            TextSpan(text: '6.2. Der Endnutzer gestattet die NextLevelNation, soweit dies gesetzlich erlaubt ist, die anonymisierte Auswertung der bei der '
+                                'NextLevelNation für den Endnutzer gespeicherten Daten, etwa für statistische Zwecke, sowie die Verwertung der Auswertungen durch die NextLevelNation.\n\n'),
 
-                            const TextSpan(text: 'Haftung für Links', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: 'Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte '
-                                'auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten '
-                                'wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente '
-                                'inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen '
-                                'werden wir derartige Links umgehend entfernen.\n\n'),
+                            TextSpan(text: '7. Gewährleistung\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: 'Die NextLevelNation gewährleistet, dass die Dienstleistungen technisch korrekt erbracht werden.\n\n'),
 
-                            const TextSpan(text: 'Urheberrecht', style: const TextStyle(fontWeight: FontWeight.bold)),
-                            const TextSpan(text: 'Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, '
-                                'Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. '
-                                'Erstellers.Downloads und Kopien dieser Seite sind nur für den privaten, nicht für den kommerziellen gebrauch gestattet.\n\n'),
+                            TextSpan(text: '8. Haftung\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: 'Die NextLevelNation distanziert sich von allen illegalen Aktivitäten, welche über die Funktionen, Kommentare oder Mitteilungen verbreitet '
+                                'werden. Die Haftung liegt bei dem Endnutzer.\n\n'),
+
+                            TextSpan(text: '9. Schlussbestimmungen\n\n', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+                            TextSpan(text: '9.1 Änderungen und Ergänzungen des Vertrages bedürfen zu ihrer Gültigkeit der Schriftform.\n\n'),
+                            TextSpan(text: '9.2 Der Vertrag oder einzelne daraus abgeleitete Rechte dürfen nur nach vorgängiger schriftlicher Zustimmung der anderen Partei an '
+                                'Dritte abgetreten werden.\n\n'),
+                            TextSpan(text: '9.3 Sollte eine Bestimmung dieses Vertrages unwirksam oder undurchführbar sein, bleibt die Wirksamkeit der übrigen Bestimmungen dieses Vertrages '
+                                'hiervon unberührt. Die Parteien haben die unwirksame oder undurchführbare Bestimmung durch eine Vorschrift zu ersetzen, die ihrem wirtschaftlichen Ergebnis '
+                                'entspricht.\n\n'),
+                            TextSpan(text: '9.4 Sämtliche Bestimmungen des Vertrages, welche sich aufgrund ihrer Natur über dessen Beendigung ausdehnen, verbleiben in Kraft, bis sie erfüllt '
+                                'sind, unter Einschluss der Vertraulichkeit, des massgebenden Rechts, der Vergütung, des geistigen Eigentums, der Haftung sowie der Gewährleistung.\n\n'),
+                            TextSpan(text: '9.5 Bei Meinungsverschiedenheiten werden die Parteien vor Anrufung des Richters eine gütliche Einigung, in letzter Instanz auf Geschäftsleitungsebene, '
+                                'anstreben. Sollte eine solche aus der Sicht einer Partei nicht möglich sein, kann der Richter angerufen werden.\n\n'),
+
+                            TextSpan(text: 'Ehingen (Donau), 22.02.2022'),
                           ])
 
                   )

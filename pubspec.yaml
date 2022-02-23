@@ -43,6 +43,9 @@ dependencies:
   url_launcher:
   shared_preferences: ^2.0.12
   provider:
+  pull_to_refresh: ^2.0.0
+
+
 
 dev_dependencies:
   flutter_test:

@@ -306,120 +306,249 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
                     child: TabBarView(
                       controller: _tabController,
                       children: [
-                        SingleChildScrollView(
-                        child: Column(
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                            alignment: Alignment.center,
-                            decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Theme.of(context).primaryColor,
-                          ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                child: Column(
-                                    children: const [
-                                      Text(
-                                        'Angenommene Spiele',
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold,
+                        RefreshIndicator(
+                          onRefresh: getAcceptedMatches,
+                          child: SingleChildScrollView(
+                          child: Column(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: Theme.of(context).primaryColor,
+                            ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                  child: Column(
+                                      children: const [
+                                        Text(
+                                          'Angenommene Spiele',
+                                          style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
-                                      ),
-                                    ]
+                                      ]
+                                    ),
                                   ),
                                 ),
-                              ),
-                                Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                                  child: Column(
-                                    children: [ FutureBuilder(
-                                    future: _memoizer.runOnce(() => getAcceptedMatches()),
-                                    builder: (context, AsyncSnapshot snapshot){
-                                    if(_acceptedMatches.isNotEmpty) {
-                                      return ListView.builder(
-                                          physics: const NeverScrollableScrollPhysics(),
-                                          scrollDirection: Axis.vertical,
-                                          shrinkWrap: true,
-                                          itemCount: _acceptedMatches.length,
-                                          itemBuilder: (context, i) {
-                                        return Card(
-                                          color: Theme.of(context).primaryColor,
-                                          shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          ),
-                                          child: ListTile(
-                                            leading: CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                                ('assets/images/games/'+_acceptedMatches[i].game.toString()+'.png'),
-                                              ),
+                                  Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                                    child: Column(
+                                      children: [ FutureBuilder(
+                                      future: _memoizer.runOnce(() => getAcceptedMatches()),
+                                      builder: (context, AsyncSnapshot snapshot){
+                                      if(_acceptedMatches.isNotEmpty) {
+                                        return ListView.builder(
+                                            physics: const NeverScrollableScrollPhysics(),
+                                            scrollDirection: Axis.vertical,
+                                            shrinkWrap: true,
+                                            itemCount: _acceptedMatches.length,
+                                            itemBuilder: (context, i) {
+                                          return Card(
+                                            color: Theme.of(context).primaryColor,
+                                            shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(10),
                                             ),
-                                            title: TextButton(
-                                              style: TextButton.styleFrom(
-                                              textStyle: const TextStyle(
-                                              fontSize: 15,
-                                              ),
-                                            ),
-                                              onPressed: () => detailMatchA(i),
-                                              child: Align(
-                                              alignment: Alignment.center,
-                                                child: Text(
-                                                  _acceptedMatches[i].team + '\n vs. ' + '\n'+_acceptedMatches[i].enemy,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(
-                                                    decoration: TextDecoration.underline,
-                                                    color: Colors.blue.shade600,
-                                                    ),
-                                                ))),
-                                                subtitle:
-                                            Column(
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                  CircleAvatar(
-                                                    radius: 12,
-                                                    backgroundImage: AssetImage(
-                                                      ('assets/images/events/'+_acceptedMatches[i].game.toString()+'/'+_acceptedMatches[i].event.toString()+'.png'),
-                                                    ),
-                                                  ),
-                                                  Text(' '+_events[_acceptedMatches[i].event-2].name,
-                                                    style: const TextStyle(
-                                                    fontSize: 12,
-                                                    )
-                                                  ),
-                                                  ]
+                                            child: ListTile(
+                                              leading: CircleAvatar(
+                                              backgroundImage: AssetImage(
+                                                  ('assets/images/games/'+_acceptedMatches[i].game.toString()+'.png'),
                                                 ),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  children: [
-                                                  const Icon(
-                                                    Icons.access_time
-                                                  ),
-                                                  Text(' '+
-                                                  DateFormat('EEEE, dd.MM.yyyy HH:mm', 'de_DE').format(DateTime.parse(_acceptedMatches[i].scheduledFor))+ ' Uhr',
-                                                    style: const TextStyle(
-                                                    fontSize: 12,
+                                              ),
+                                              title: TextButton(
+                                                style: TextButton.styleFrom(
+                                                textStyle: const TextStyle(
+                                                fontSize: 15,
+                                                ),
+                                              ),
+                                                onPressed: () => detailMatchA(i),
+                                                child: Align(
+                                                alignment: Alignment.center,
+                                                  child: Text(
+                                                    _acceptedMatches[i].team + '\n vs. ' + '\n'+_acceptedMatches[i].enemy,
+                                                      textAlign: TextAlign.center,
+                                                      style: TextStyle(
+                                                      decoration: TextDecoration.underline,
+                                                      color: Colors.blue.shade600,
+                                                      ),
+                                                  ))),
+                                                  subtitle:
+                                              Column(
+                                                children: [
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                    CircleAvatar(
+                                                      radius: 12,
+                                                      backgroundImage: AssetImage(
+                                                        ('assets/images/events/'+_acceptedMatches[i].game.toString()+'/'+_acceptedMatches[i].event.toString()+'.png'),
+                                                      ),
                                                     ),
+                                                    Text(' '+_events[_acceptedMatches[i].event-2].name,
+                                                      style: const TextStyle(
+                                                      fontSize: 12,
+                                                      )
+                                                    ),
+                                                    ]
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    children: [
+                                                    const Icon(
+                                                      Icons.access_time
+                                                    ),
+                                                    Text(' '+
+                                                    DateFormat('EEEE, dd.MM.yyyy HH:mm', 'de_DE').format(DateTime.parse(_acceptedMatches[i].scheduledFor))+ ' Uhr',
+                                                      style: const TextStyle(
+                                                      fontSize: 12,
+                                                      ),
+                                                    ),
+                                                    ],
                                                   ),
                                                   ],
                                                 ),
-                                                ],
                                               ),
-                                            ),
-                                          );
+                                            );
+                                          }
+                                        );
                                         }
-                                      );
-                                      }
-                                        else {return Card(
-                                        color: Theme.of(context).primaryColor,
-                                        shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                          child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                            child: Text('Du hast momentan keine aktiven Spiele, welche du übertragen musst!'),));}
-                                      },
+                                          else {return Card(
+                                          color: Theme.of(context).primaryColor,
+                                          shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(10),
+                                        ),
+                                            child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                              child: Text('Du hast momentan keine aktiven Spiele, welche du übertragen musst!'),));}
+                                        },
+                                        )
+                                        ]
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 40,
+                                  )
+                              ],
+                            ),
+                      ),
+                        ),
+                        RefreshIndicator(
+                          onRefresh: getFilteredMatches,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                    child: Column(
+                                        children: const [
+                                          Text(
+                                            'Exklusive Anfragen',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ]
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                                  child: Column(
+                                      children: [ FutureBuilder(
+                                        future: _memoizer.runOnce(() => getFilteredMatches()),
+                                        builder: (context, AsyncSnapshot snapshot){
+                                          if(_filteredMatches.isNotEmpty) {
+                                            return ListView.builder(
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                itemCount: _filteredMatches.length,
+                                                itemBuilder: (context, i) {
+                                                  return Card(
+                                                    color: Theme.of(context).primaryColor,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10),
+                                                    ),
+                                                    child: ListTile(
+                                                      leading: CircleAvatar(
+                                                        backgroundImage: AssetImage(
+                                                          ('assets/images/games/'+_filteredMatches[i].game.toString()+'.png'),
+                                                        ),
+                                                      ),
+                                                      title: TextButton(
+                                                          style: TextButton.styleFrom(
+                                                            textStyle: const TextStyle(
+                                                              fontSize: 15,
+                                                            ),
+                                                          ),
+                                                          onPressed: () => detailMatchF(i),
+                                                          child: Align(
+                                                              alignment: Alignment.center,
+                                                              child: Text(
+                                                                _filteredMatches[i].team + '\n vs. ' + '\n'+_filteredMatches[i].enemy,
+                                                                textAlign: TextAlign.center,
+                                                                style: TextStyle(
+                                                                  decoration: TextDecoration.underline,
+                                                                  color: Colors.blue.shade600,
+                                                                ),
+                                                              ))),
+                                                      subtitle:
+                                                      Column(
+                                                        children: [
+                                                          Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              children: [
+                                                                CircleAvatar(
+                                                                  radius: 12,
+                                                                  backgroundImage: AssetImage(
+                                                                    ('assets/images/events/'+_filteredMatches[i].game.toString()+'/'+_filteredMatches[i].event.toString()+'.png'),
+                                                                  ),
+                                                                ),
+                                                                Text(' '+_events[_filteredMatches[i].event-2].name,
+                                                                    style: const TextStyle(
+                                                                      fontSize: 12,
+                                                                    )
+                                                                ),
+                                                              ]
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            children: [
+                                                              const Icon(
+                                                                  Icons.access_time
+                                                              ),
+                                                              Text(' '+
+                                                                  DateFormat('EEEE, dd.MM.yyyy HH:mm', 'de_DE').format(DateTime.parse(_filteredMatches[i].scheduledFor))+ ' Uhr',
+                                                                style: const TextStyle(
+                                                                  fontSize: 12,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                            );
+                                          }
+                                          else {return Card(
+                                                  color: Theme.of(context).primaryColor,
+                                                  shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(10),
+                                              ),
+                                                  child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                                    child: Text('Aktuell existieren keine exklusiven Anfragen')));}
+                                        },
                                       )
                                       ]
                                   ),
@@ -427,262 +556,142 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
                                 const SizedBox(
                                   height: 40,
                                 )
-                            ],
-                          ),
-                      ),
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  child: Column(
-                                      children: const [
-                                        Text(
-                                          'Exklusive Anfragen',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ]
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                                child: Column(
-                                    children: [ FutureBuilder(
-                                      future: _memoizer.runOnce(() => getFilteredMatches()),
-                                      builder: (context, AsyncSnapshot snapshot){
-                                        if(_filteredMatches.isNotEmpty) {
-                                          return ListView.builder(
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              scrollDirection: Axis.vertical,
-                                              shrinkWrap: true,
-                                              itemCount: _filteredMatches.length,
-                                              itemBuilder: (context, i) {
-                                                return Card(
-                                                  color: Theme.of(context).primaryColor,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10),
-                                                  ),
-                                                  child: ListTile(
-                                                    leading: CircleAvatar(
-                                                      backgroundImage: AssetImage(
-                                                        ('assets/images/games/'+_filteredMatches[i].game.toString()+'.png'),
-                                                      ),
-                                                    ),
-                                                    title: TextButton(
-                                                        style: TextButton.styleFrom(
-                                                          textStyle: const TextStyle(
-                                                            fontSize: 15,
-                                                          ),
-                                                        ),
-                                                        onPressed: () => detailMatchF(i),
-                                                        child: Align(
-                                                            alignment: Alignment.center,
-                                                            child: Text(
-                                                              _filteredMatches[i].team + '\n vs. ' + '\n'+_filteredMatches[i].enemy,
-                                                              textAlign: TextAlign.center,
-                                                              style: TextStyle(
-                                                                decoration: TextDecoration.underline,
-                                                                color: Colors.blue.shade600,
-                                                              ),
-                                                            ))),
-                                                    subtitle:
-                                                    Column(
-                                                      children: [
-                                                        Row(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            children: [
-                                                              CircleAvatar(
-                                                                radius: 12,
-                                                                backgroundImage: AssetImage(
-                                                                  ('assets/images/events/'+_filteredMatches[i].game.toString()+'/'+_filteredMatches[i].event.toString()+'.png'),
-                                                                ),
-                                                              ),
-                                                              Text(' '+_events[_filteredMatches[i].event-2].name,
-                                                                  style: const TextStyle(
-                                                                    fontSize: 12,
-                                                                  )
-                                                              ),
-                                                            ]
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          children: [
-                                                            const Icon(
-                                                                Icons.access_time
-                                                            ),
-                                                            Text(' '+
-                                                                DateFormat('EEEE, dd.MM.yyyy HH:mm', 'de_DE').format(DateTime.parse(_filteredMatches[i].scheduledFor))+ ' Uhr',
-                                                              style: const TextStyle(
-                                                                fontSize: 12,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              }
-                                          );
-                                        }
-                                        else {return Card(
-                                                color: Theme.of(context).primaryColor,
-                                                shape: RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.circular(10),
-                                            ),
-                                                child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                                  child: Text('Aktuell existieren keine exklusiven Anfragen')));}
-                                      },
-                                    )
-                                    ]
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 40,
-                              )
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                        SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                                alignment: Alignment.center,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                  child: Column(
-                                      children: const [
-                                        Text(
-                                          'Offene Anfragen',
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold,
+                        RefreshIndicator(
+                          onRefresh: getEventData,
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                    child: Column(
+                                        children: const [
+                                          Text(
+                                            'Offene Anfragen',
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                           ),
-                                        ),
-                                      ]
+                                        ]
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
-                                child: Column(
-                                    children: [ FutureBuilder(
-                                      future: _memoizer.runOnce(() => getRequestedMatches()),
-                                      builder: (context, AsyncSnapshot snapshot){
-                                        if(_requestedMatches.isNotEmpty) {
-                                          return ListView.builder(
-                                              physics: const NeverScrollableScrollPhysics(),
-                                              scrollDirection: Axis.vertical,
-                                              shrinkWrap: true,
-                                              itemCount: _requestedMatches.length,
-                                              itemBuilder: (context, i) {
-                                                return Card(
-                                                  color: Theme.of(context).primaryColor,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(10),
-                                                  ),
-                                                  child: ListTile(
-                                                    leading: CircleAvatar(
-                                                      backgroundImage: AssetImage(
-                                                        ('assets/images/games/'+_requestedMatches[i].game.toString()+'.png'),
-                                                      ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                                  child: Column(
+                                      children: [ FutureBuilder(
+                                        future: _memoizer.runOnce(() => getRequestedMatches()),
+                                        builder: (context, AsyncSnapshot snapshot){
+                                          if(_requestedMatches.isNotEmpty) {
+                                            return ListView.builder(
+                                                physics: const NeverScrollableScrollPhysics(),
+                                                scrollDirection: Axis.vertical,
+                                                shrinkWrap: true,
+                                                itemCount: _requestedMatches.length,
+                                                itemBuilder: (context, i) {
+                                                  return Card(
+                                                    color: Theme.of(context).primaryColor,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(10),
                                                     ),
-                                                    title: TextButton(
-                                                        style: TextButton.styleFrom(
-                                                          textStyle: const TextStyle(
-                                                            fontSize: 15,
-                                                          ),
+                                                    child: ListTile(
+                                                      leading: CircleAvatar(
+                                                        backgroundImage: AssetImage(
+                                                          ('assets/images/games/'+_requestedMatches[i].game.toString()+'.png'),
                                                         ),
-                                                        onPressed: () => detailMatchR(i),
-                                                        child: Align(
-                                                            alignment: Alignment.center,
-                                                            child: Text(
-                                                              _requestedMatches[i].team + '\n vs. ' + '\n'+_requestedMatches[i].enemy,
-                                                              textAlign: TextAlign.center,
-                                                              style: TextStyle(
-                                                                decoration: TextDecoration.underline,
-                                                                color: Colors.blue.shade600,
-                                                              ),
-                                                            ))),
-                                                    subtitle:
-                                                    Column(
-                                                      children: [
-                                                        Row(
-                                                            mainAxisAlignment: MainAxisAlignment.start,
-                                                            children: [
-                                                              CircleAvatar(
-                                                                radius: 12,
-                                                                backgroundImage: AssetImage(
-                                                                  ('assets/images/events/'+_requestedMatches[i].game.toString()+'/'+_requestedMatches[i].event.toString()+'.png'),
+                                                      ),
+                                                      title: TextButton(
+                                                          style: TextButton.styleFrom(
+                                                            textStyle: const TextStyle(
+                                                              fontSize: 15,
+                                                            ),
+                                                          ),
+                                                          onPressed: () => detailMatchR(i),
+                                                          child: Align(
+                                                              alignment: Alignment.center,
+                                                              child: Text(
+                                                                _requestedMatches[i].team + '\n vs. ' + '\n'+_requestedMatches[i].enemy,
+                                                                textAlign: TextAlign.center,
+                                                                style: TextStyle(
+                                                                  decoration: TextDecoration.underline,
+                                                                  color: Colors.blue.shade600,
                                                                 ),
-                                                              ),
-                                                              if(_requestedMatches[i].event < 8)
-                                                              Text(' '+_events[_requestedMatches[i].event-1].name,
-                                                                  style: const TextStyle(
-                                                                    fontSize: 12,
-                                                                  )
-                                                              ),
-                                                              if(_requestedMatches[i].event > 8)
-                                                                Text(' '+_events[_requestedMatches[i].event-2].name,
+                                                              ))),
+                                                      subtitle:
+                                                      Column(
+                                                        children: [
+                                                          Row(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              children: [
+                                                                CircleAvatar(
+                                                                  radius: 12,
+                                                                  backgroundImage: AssetImage(
+                                                                    ('assets/images/events/'+_requestedMatches[i].game.toString()+'/'+_requestedMatches[i].event.toString()+'.png'),
+                                                                  ),
+                                                                ),
+                                                                if(_requestedMatches[i].event < 8)
+                                                                Text(' '+_events[_requestedMatches[i].event-1].name,
                                                                     style: const TextStyle(
                                                                       fontSize: 12,
                                                                     )
                                                                 ),
-                                                            ]
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment: MainAxisAlignment.start,
-                                                          children: [
-                                                            const Icon(
-                                                                Icons.access_time
-                                                            ),
-                                                            Text(' '+
-                                                                DateFormat('EEEE, dd.MM.yyyy HH:mm', 'de_DE').format(DateTime.parse(_requestedMatches[i].scheduledFor))+ ' Uhr',
-                                                              style: const TextStyle(
-                                                                fontSize: 12,
+                                                                if(_requestedMatches[i].event > 8)
+                                                                  Text(' '+_events[_requestedMatches[i].event-2].name,
+                                                                      style: const TextStyle(
+                                                                        fontSize: 12,
+                                                                      )
+                                                                  ),
+                                                              ]
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            children: [
+                                                              const Icon(
+                                                                  Icons.access_time
                                                               ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ],
+                                                              Text(' '+
+                                                                  DateFormat('EEEE, dd.MM.yyyy HH:mm', 'de_DE').format(DateTime.parse(_requestedMatches[i].scheduledFor))+ ' Uhr',
+                                                                style: const TextStyle(
+                                                                  fontSize: 12,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
-                                                );
-                                              }
-                                          );
-                                        }
-                                        else {return Card(
-                                            color: Theme.of(context).primaryColor,
-                                            shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(10),
-                                        ),
-                                          child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-                                            child: Text('Aktuell existieren keine Anfragen für neue Matches')));}
-                                      },
-                                    )
-                                    ]
+                                                  );
+                                                }
+                                            );
+                                          }
+                                          else {return Card(
+                                              color: Theme.of(context).primaryColor,
+                                              shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(10),
+                                          ),
+                                            child: const Padding(padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                                              child: Text('Aktuell existieren keine Anfragen für neue Matches')));}
+                                        },
+                                      )
+                                      ]
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 40,
-                              )
-                            ],
+                                const SizedBox(
+                                  height: 40,
+                                )
+                              ],
+                            ),
                           ),
                         ),
                     ],
