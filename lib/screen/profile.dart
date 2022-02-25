@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:justcast_app/class/appColors.dart';
-import 'package:justcast_app/screen/agb.dart';
+import 'package:justcast_app/screen/legal/agb.dart';
 import 'package:justcast_app/screen/dashboard.dart';
-import 'package:justcast_app/screen/datasecure.dart';
-import 'package:justcast_app/screen/impressum.dart';
+import 'package:justcast_app/screen/legal/datasecure.dart';
+import 'package:justcast_app/screen/legal/impressum.dart';
 import 'package:justcast_app/screen/login.dart';
 import 'package:justcast_app/services/auth_services.dart';
 import 'package:justcast_app/services/globals.dart';
@@ -121,15 +121,15 @@ class _ProfileState extends State<Profile> {
                       shape: BoxShape.circle,
                       image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
                 ),
-                const SizedBox(
-                  width: 50,
-                ),
-                Image.asset(
-                  isDarkMode
-                      ? 'assets/images/logo_white.png'
-                      : 'assets/images/logo_black.png',
-                  fit: BoxFit.contain,
-                  height: 80,
+                Expanded(
+                  flex: 1,
+                  child: Image.asset(
+                    isDarkMode
+                        ? 'assets/images/logo_white.png'
+                        : 'assets/images/logo_black.png',
+                    fit: BoxFit.contain,
+                    height: 80,
+                  ),
                 ),
                     ]
                 ),

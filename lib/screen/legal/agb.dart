@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:justcast_app/screen/datasecure.dart';
-import 'package:justcast_app/screen/impressum.dart';
+import 'package:justcast_app/screen/legal/datasecure.dart';
+import 'package:justcast_app/screen/legal/impressum.dart';
 import 'package:justcast_app/services/globals.dart';
 import 'package:justcast_app/services/navigation_service.dart';
 import 'package:justcast_app/widget/change_theme_button_widget.dart';
@@ -22,55 +22,63 @@ class AGB extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 IconButton(
-                  onPressed: () async {
-                    launch('https://discord.gg/WYfmfzskwr');
-                  },
-                  icon: Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
-                ),
-                const SizedBox(
-                  width: 50,
-                ),
-                Image.asset(
+                    onPressed: () async {
+                      launch('https://discord.gg/WYfmfzskwr');
+                    },
+                    icon: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
+                  ),
+            Expanded(
+              flex: 1,
+              child: Image.asset(
                   isDarkMode
                       ? 'assets/images/logo_white.png'
                       : 'assets/images/logo_black.png',
                   fit: BoxFit.contain,
                   height: 80,
                 ),
+            ),
               ]
           ),
           actions: [
             PopupMenuButton(
               itemBuilder: (context) {
                 return [
-                  const PopupMenuItem<int>(
-                    value: 0,
-                    child: Text("Meine Anfragen"),
-                  ),
-                  if(isCaster == true)
+                  if(userAuth.isNotEmpty)
+                    const PopupMenuItem<int>(
+                      value: 0,
+                      child: Text("Meine Anfragen"),
+                    ),
+                  if(isCaster == true && userAuth.isNotEmpty)
                     const PopupMenuItem<int>(
                       value: 4,
                       child: Text("Angefragte Spiele"),
                     ),
-                  const PopupMenuItem<int>(
-                    value: 1,
-                    child: Text("Mein Profil"),
-                  ),
+                  if(userAuth.isNotEmpty)
+                    const PopupMenuItem<int>(
+                      value: 1,
+                      child: Text("Mein Profil"),
+                    ),
                   PopupMenuItem<int>(
                     value: 2,
                     child: Column(
-                        children: const [
-                          ChangeThemeButtonWidget(),
+                        children: [
+                          const ChangeThemeButtonWidget(),
                         ]
                     ),
                   ),
-                  const PopupMenuItem<int>(
-                    value: 3,
-                    child: Text("Logout"),
-                  ),
+                  if(userAuth.isNotEmpty)
+                    const PopupMenuItem<int>(
+                      value: 3,
+                      child: Text("Logout"),
+                    ),
+                  if(userAuth.isEmpty)
+                    const PopupMenuItem(
+                        value: 5,
+                        child: Text("Login"),
+                    ),
                 ];
               },
               onSelected: (value) {
@@ -85,6 +93,8 @@ class AGB extends StatelessWidget {
                 }else if(value == 3) {
                   userAuth = "";
                   NavigationService.onPressedLogout(context);
+                }else if(value == 5) {
+                  NavigationService.onPressedLogin(context);
                 }
               },
             ),

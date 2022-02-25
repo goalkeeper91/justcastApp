@@ -7,16 +7,17 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
 import 'package:justcast_app/screen/add_new_match.dart';
-import 'package:justcast_app/screen/agb.dart';
-import 'package:justcast_app/screen/datasecure.dart';
+import 'package:justcast_app/screen/legal/agb.dart';
+import 'package:justcast_app/screen/legal/datasecure.dart';
 import 'package:justcast_app/screen/detail_match.dart';
-import 'package:justcast_app/screen/impressum.dart';
+import 'package:justcast_app/screen/legal/impressum.dart';
 import 'package:justcast_app/services/dashboard_service.dart';
 import 'package:justcast_app/services/globals.dart';
 import 'package:justcast_app/class/match.dart';
 import 'package:justcast_app/services/navigation_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:justcast_app/widget/change_theme_button_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Dashboard extends StatefulWidget {
@@ -128,24 +129,23 @@ class _DashboardState extends State<Dashboard> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               IconButton(
-                onPressed: () async {
-                  launch('https://discord.gg/WYfmfzskwr');
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-              Image.asset(
+                  onPressed: () async {
+                    launch('https://discord.gg/WYfmfzskwr');
+                  },
+                  icon: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
+                ),
+            Expanded(
+              flex: 1,
+              child: Image.asset(
                 isDarkMode
                     ? 'assets/images/logo_white.png'
                     : 'assets/images/logo_black.png',
                 fit: BoxFit.contain,
                 height: 80,
-              ),
+              ),),
               ]
             ),
         actions: [
@@ -207,7 +207,7 @@ class _DashboardState extends State<Dashboard> {
                       color: Theme.of(context).primaryColor,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                         child: Column(
                           children: const [
                             Text(
@@ -221,14 +221,11 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                 ),
-                          const SizedBox(
-                            height:  5,
-                          ),
                         Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 7),
                             child: Column(
                                 children: [ FutureBuilder(
-                                  future: this._memoizer.runOnce(() => getMatches()),
+                                  future: _memoizer.runOnce(() => getMatches()),
                                   builder: (context, AsyncSnapshot snapshot){
                                     if(_matches.isNotEmpty) {
                                         return ListView.builder(
@@ -238,6 +235,7 @@ class _DashboardState extends State<Dashboard> {
                                                   itemCount: _matches.length,
                                                   itemBuilder: (context, i) {
                                                   return Card(
+                                                    margin: EdgeInsets.all(3),
                                                   color: (_matches[i].status ==
                                                       'accepted') ? Colors
                                                       .greenAccent[700] : Theme
@@ -284,9 +282,9 @@ class _DashboardState extends State<Dashboard> {
                                                             ))),
                                                     subtitle:
                                                     Column(
-                                                      children: [Row(
-                                                          mainAxisAlignment: MainAxisAlignment
-                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment: MainAxisAlignment.start,
                                                           children: [
                                                             CircleAvatar(
                                                               radius: 12,
@@ -300,7 +298,14 @@ class _DashboardState extends State<Dashboard> {
                                                                     '.png'),
                                                               ),
                                                             ),
+                                                              if(_events.isNotEmpty)
                                                               Text(' '+_events.firstWhere((event) => event.id == _matches[i].event).name,
+                                                                  style: const TextStyle(
+                                                                    fontSize: 12,
+                                                                  )
+                                                              ),
+                                                            if(_events.isEmpty)
+                                                              Text(' Fehler beim Laden der Liga ',
                                                                   style: const TextStyle(
                                                                     fontSize: 12,
                                                                   )
@@ -308,8 +313,7 @@ class _DashboardState extends State<Dashboard> {
                                                           ]
                                                       ),
                                                         Row(
-                                                          mainAxisAlignment: MainAxisAlignment
-                                                              .start,
+                                                          mainAxisAlignment: MainAxisAlignment.start,
                                                           children: [
                                                             const Icon(
                                                                 Icons.access_time

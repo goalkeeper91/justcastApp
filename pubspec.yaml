@@ -41,7 +41,7 @@ dependencies:
   intl: ^0.17.0
   flutter_datetime_picker: ^1.5.1
   url_launcher:
-  shared_preferences: ^2.0.12
+  shared_preferences: ^2.0.13
   provider:
   pull_to_refresh: ^2.0.0
 
@@ -50,6 +50,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.2
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/app_logo.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -76,6 +82,7 @@ flutter:
      - assets/images/events/3/
      - assets/images/games/
      - assets/images/
+     - assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

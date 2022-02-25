@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:justcast_app/class/caster.dart';
 import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
-import 'package:justcast_app/screen/agb.dart';
-import 'package:justcast_app/screen/datasecure.dart';
-import 'package:justcast_app/screen/impressum.dart';
+import 'package:justcast_app/screen/legal/agb.dart';
+import 'package:justcast_app/screen/legal/datasecure.dart';
+import 'package:justcast_app/screen/legal/impressum.dart';
 import 'package:justcast_app/widget/change_theme_button_widget.dart';
 import 'package:justcast_app/widget/rounded_button.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -117,30 +117,33 @@ class _AddNewMatchState extends State<AddNewMatch> {
         appBar: AppBar(
           iconTheme: Theme.of(context).iconTheme,
           backgroundColor: Theme.of(context).backgroundColor,
-          title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  onPressed: () async {
-                    launch('https://discord.gg/WYfmfzskwr');
-                  },
-                  icon: Container(
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
-                ),
-                const SizedBox(
-                  width: 50,
-                ),
-                Image.asset(
-                  isDarkMode
-                      ? 'assets/images/logo_white.png'
-                      : 'assets/images/logo_black.png',
-                  fit: BoxFit.contain,
-                  height: 80,
-                ),
-                    ]
-                ),
+          title:Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  IconButton(
+                    onPressed: () async {
+                      launch('https://discord.gg/WYfmfzskwr');
+                    },
+                    icon: Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
+                  ),
+                  const SizedBox(
+                    width: 50,
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Image.asset(
+                      isDarkMode
+                          ? 'assets/images/logo_white.png'
+                          : 'assets/images/logo_black.png',
+                      fit: BoxFit.contain,
+                      height: 80,
+                    ),
+                  ),
+                      ]
+                  ),
           actions: [
             PopupMenuButton(
               itemBuilder: (context) {

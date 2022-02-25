@@ -6,10 +6,10 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
-import 'package:justcast_app/screen/agb.dart';
-import 'package:justcast_app/screen/datasecure.dart';
+import 'package:justcast_app/screen/legal/agb.dart';
+import 'package:justcast_app/screen/legal/datasecure.dart';
 import 'package:justcast_app/screen/detail_match.dart';
-import 'package:justcast_app/screen/impressum.dart';
+import 'package:justcast_app/screen/legal/impressum.dart';
 import 'package:justcast_app/services/dashboard_service.dart';
 import 'package:justcast_app/services/globals.dart';
 import 'package:justcast_app/class/match.dart';
@@ -223,24 +223,23 @@ class _CasterDashboardState extends State<CasterDashboard> with TickerProviderSt
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               IconButton(
-                onPressed: () async {
-                  launch('https://discord.gg/WYfmfzskwr');
-                },
-                icon: Container(
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
-              ),
-              const SizedBox(
-                width: 50,
-              ),
-              Image.asset(
+                  onPressed: () async {
+                    launch('https://discord.gg/WYfmfzskwr');
+                  },
+                  icon: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
+                ),
+            Expanded(
+              flex: 1,
+              child: Image.asset(
                 isDarkMode
                     ? 'assets/images/logo_white.png'
                     : 'assets/images/logo_black.png',
                 fit: BoxFit.contain,
                 height: 80,
-              ),
+              ),),
                   ]
               ),
         actions: [

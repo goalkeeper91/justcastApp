@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:justcast_app/screen/agb.dart';
-import 'package:justcast_app/screen/datasecure.dart';
-import 'package:justcast_app/screen/impressum.dart';
+import 'package:justcast_app/screen/legal/agb.dart';
+import 'package:justcast_app/screen/legal/datasecure.dart';
+import 'package:justcast_app/screen/legal/impressum.dart';
 import 'package:justcast_app/widget/change_theme_button_widget.dart';
 import 'package:justcast_app/widget/rounded_button.dart';
 import 'package:justcast_app/screen/dashboard.dart';
@@ -25,6 +25,7 @@ class _RegisterState extends State<Register> {
   String _email = '';
   String _password = '';
   String _username = '';
+  bool hidePassword = true;
 
   createAccountPressed() async {
     bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -67,15 +68,15 @@ class _RegisterState extends State<Register> {
                       shape: BoxShape.circle,
                       image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
                 ),
-                const SizedBox(
-                  width: 50,
-                ),
-                Image.asset(
-                  isDarkMode
-                      ? 'assets/images/logo_white.png'
-                      : 'assets/images/logo_black.png',
-                  fit: BoxFit.contain,
-                  height: 80,
+                Expanded(
+                  flex: 1,
+                  child: Image.asset(
+                    isDarkMode
+                        ? 'assets/images/logo_white.png'
+                        : 'assets/images/logo_black.png',
+                    fit: BoxFit.contain,
+                    height: 80,
+                  ),
                 ),
                   ]
               ),
@@ -125,6 +126,7 @@ class _RegisterState extends State<Register> {
                 TextField(
               decoration: const InputDecoration(
                 hintText: 'Username',
+                prefixIcon: Icon(Icons.account_circle),
                 border: OutlineInputBorder(
                   borderRadius: const BorderRadius.all(Radius.circular(4.0))
                 )
@@ -139,6 +141,7 @@ class _RegisterState extends State<Register> {
                 TextField(
               decoration: const InputDecoration(
                 hintText: 'Email',
+                  prefixIcon: Icon(Icons.email),
                   border: OutlineInputBorder(
                       borderRadius: const BorderRadius.all(Radius.circular(4.0))
                   )
@@ -151,16 +154,25 @@ class _RegisterState extends State<Register> {
               height: 15,
             ),
                 TextField(
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                  hintText: 'Passwort',
-                  border: OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(Radius.circular(4.0))
-                  )
-              ),
-              onChanged: (value) {
-                _password = value;
-              },
+                  obscureText: hidePassword,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                          borderRadius: const BorderRadius.all(Radius.circular(4.0))
+                      ),
+                      prefixIcon: Icon(Icons.lock),
+                      hintText: 'Passwort',
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          setState(() {
+                            hidePassword = !hidePassword;
+                          });
+                        },
+                        icon: Icon(hidePassword? Icons.visibility_off : Icons.visibility),
+                      )
+                  ),
+                  onChanged: (value) {
+                    _password = value;
+                  },
             ),
                 const SizedBox(
               height: 40,

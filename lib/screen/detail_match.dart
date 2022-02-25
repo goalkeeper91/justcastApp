@@ -9,10 +9,10 @@ import 'package:justcast_app/class/event.dart';
 import 'package:justcast_app/class/game.dart';
 import 'package:justcast_app/class/match.dart';
 import 'package:justcast_app/class/user.dart';
-import 'package:justcast_app/screen/agb.dart';
+import 'package:justcast_app/screen/legal/agb.dart';
 import 'package:justcast_app/screen/dashboard.dart';
-import 'package:justcast_app/screen/datasecure.dart';
-import 'package:justcast_app/screen/impressum.dart';
+import 'package:justcast_app/screen/legal/datasecure.dart';
+import 'package:justcast_app/screen/legal/impressum.dart';
 import 'package:justcast_app/services/globals.dart';
 import 'package:justcast_app/services/match_services.dart';
 import 'package:justcast_app/services/navigation_service.dart';
@@ -245,15 +245,15 @@ class _DetailMatchState extends State<DetailMatch> {
                     shape: BoxShape.circle,
                     image: DecorationImage(image: AssetImage('assets/images/discord.png')),),),
               ),
-              const SizedBox(
-                width: 50,
-              ),
-              Image.asset(
-                isDarkMode
-                    ? 'assets/images/logo_white.png'
-                    : 'assets/images/logo_black.png',
-                fit: BoxFit.contain,
-                height: 80,
+              Expanded(
+                flex: 1,
+                child: Image.asset(
+                  isDarkMode
+                      ? 'assets/images/logo_white.png'
+                      : 'assets/images/logo_black.png',
+                  fit: BoxFit.contain,
+                  height: 80,
+                ),
               ),
                   ]
               ),
@@ -315,7 +315,7 @@ class _DetailMatchState extends State<DetailMatch> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    if(match.caster == null && userId != match.user || casterId == match.caster)
+                    if(match.caster == null && casterId != null || casterId == match.caster)
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: setColor(),
