@@ -99,14 +99,29 @@ class _AddNewMatchState extends State<AddNewMatch> {
   }
 
   requestMatchPressed() async {
-    http.Response response = await MatchServices.requestMatch(int.tryParse(_game), int.tryParse(_event), userId, _caster, _team, _enemy, _matchlink, _infos, _scheduledfor, _isexclusive);
-    Map responseMap = jsonDecode(response.body);
-    if(response.statusCode==200){
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => const Dashboard()
-          ));
-    }else{
-      errorSnackBar(context, 'Match wurde bereits angefragt.');
+    if(_game.isNotEmpty && _event.isNotEmpty && _team.isNotEmpty && _enemy.isNotEmpty && _matchlink.isNotEmpty && _scheduledfor.isBefore(DateTime.now())) {
+      http.Response response = await MatchServices.requestMatch(
+          int.tryParse(_game),
+          int.tryParse(_event),
+          userId,
+          _caster,
+          _team,
+          _enemy,
+          _matchlink,
+          _infos,
+          _scheduledfor,
+          _isexclusive);
+      Map responseMap = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => const Dashboard()
+            ));
+      } else {
+        errorSnackBar(context, 'Match wurde bereits angefragt.');
+      }
+    } else {
+      errorSnackBar(context, 'Bitte fülle die markierten Felder korrekt aus');
     }
   }
 
@@ -215,7 +230,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
                             height: 20,
                           ),
                           SmartSelect.single(
-                                  title: 'Spiel auswählen',
+                                  title: 'Spiel auswählen*',
                                   value: _game,
                                   choiceItems: gameList,
                                   onChange: (state) => setState(() => _game = state.value.toString() ),
@@ -227,7 +242,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
                                   )
                           ),
                           SmartSelect.single(
-                                title: 'Liga auswählen',
+                                title: 'Liga auswählen*',
                                 value: _event,
                                 choiceItems: eventList,
                                 onChange: (state) => setState(() => _event = state.value.toString()),
@@ -243,7 +258,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
                           ),
                           TextField(
                             decoration: const InputDecoration(
-                                hintText: 'Anfragendes Team',
+                                hintText: 'Anfragendes Team*',
                             ),
                             onChanged: (value) {
                               _team = value;
@@ -254,7 +269,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
                           ),
                           TextField(
                             decoration: const InputDecoration(
-                                hintText: 'Gegnerisches Team',
+                                hintText: 'Gegnerisches Team*',
                             ),
                             onChanged: (value) {
                               _enemy = value;
@@ -264,7 +279,7 @@ class _AddNewMatchState extends State<AddNewMatch> {
                             height: 15,
                           ),
                           TextField(decoration: const InputDecoration(
-                                hintText: 'Matchlink',
+                                hintText: 'Matchlink*',
                             ),
                             onChanged: (value) {
                               _matchlink = value;
@@ -284,10 +299,10 @@ class _AddNewMatchState extends State<AddNewMatch> {
                                     }, currentTime: DateTime.now(), locale: LocaleType.de);
                               },
                               child: const Text(
-                                'Datum und Uhrzeit auswählen',
+                                'Datum und Uhrzeit auswählen*',
                                 style: TextStyle(
                                     color: Colors.blue,
-                                    fontSize: 21,
+                                    fontSize: 20,
                                 ),
                               )
                           ),

@@ -20,14 +20,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String _username = userAuth;
+  String? _username = userAuth;
   String _password = "";
   String _passwordCheck = "";
-  String _email = userEmail;
+  String? _email = userEmail;
   var _buttonColor;
 
   safePressed() async {
-    if (_username.isNotEmpty && _email.isNotEmpty) {
+    if (_email != null) {
       if (_password.isEmpty) {
         http.Response response = await AuthServices.update(
             userAuth, _username, _email, _password);

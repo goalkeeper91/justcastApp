@@ -6,6 +6,7 @@ import 'package:justcast_app/screen/dashboard.dart';
 import 'package:justcast_app/screen/login.dart';
 import 'package:justcast_app/screen/option.dart';
 import 'package:justcast_app/screen/profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NavigationService{
 
@@ -28,6 +29,11 @@ class NavigationService{
   }
 
   static Future<void> onPressedLogout(var context) async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.remove('username');
+    localStorage.remove('token');
+    localStorage.remove('email');
+    localStorage.remove('casterId');
     Navigator.pushReplacement(context,
         MaterialPageRoute(builder: (BuildContext context) => const Login()
         ));

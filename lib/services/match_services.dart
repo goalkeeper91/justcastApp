@@ -52,7 +52,7 @@ class MatchServices {
     return response;
   }
 
-  static Future<http.Response> comment(String content, String user, int match) async {
+  static Future<http.Response> comment(String content, String? user, int match) async {
     Map data = {
       'match':match,
       'content':content,
@@ -82,7 +82,7 @@ class MatchServices {
     return response;
   }
 
-  static Future<http.Response> accept(int match, String username) async {
+  static Future<http.Response> accept(int match, String? username) async {
     Map data = {
       'match':match,
       'username':username
@@ -125,7 +125,7 @@ class MatchServices {
     return response;
   }
 
-  static Future<http.Response> setRequest(int match, String username) async {
+  static Future<http.Response> setRequest(int match, String? username) async {
     Map data = {
       'match':match,
       'username':username
@@ -168,7 +168,7 @@ class MatchServices {
     return response;
   }
 
-  static Future<http.Response> decline(int match, String username) async {
+  static Future<http.Response> decline(int match, String? username) async {
     Map data = {
       'match':match,
       'username':username

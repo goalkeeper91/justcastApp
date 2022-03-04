@@ -39,7 +39,7 @@ class AuthServices{
   }
 
   static Future<http.Response> update(
-      String user, String username, String email, String? password
+      String? user, String? username, String? email, String? password
       ) async {
     Map data = {
       "user":user,
@@ -58,7 +58,7 @@ class AuthServices{
   }
 
   static Future<http.Response> delete(
-      String username
+      String? username
       ) async {
     Map data = {
       "username":username,

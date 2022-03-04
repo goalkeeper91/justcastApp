@@ -5,7 +5,7 @@ import 'package:justcast_app/services/globals.dart';
 
 class DashboardService {
   static Future<http.Response> dashboard(
-      String username
+      String? username
       ) async {
     Map data = {
       "username":username,
@@ -21,7 +21,7 @@ class DashboardService {
   }
 
   static Future<http.Response> casterDashboard(
-      String username
+      String? username
       ) async {
     Map data = {
       "username":username,

@@ -24,9 +24,37 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String _email = '';
   String _password = '';
-  bool newUser = false;
+  bool isAuth = false;
   bool rememberMe = false;
   bool hidePassword = true;
+
+  @override
+  void initState() {
+    _checkIfLoggedIn();
+    super.initState();
+  }
+
+  void _checkIfLoggedIn() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var token = localStorage.getString('token');
+    if(token != null) {
+      setState(() {
+        isAuth = true;
+      });
+    }
+    if(isAuth){
+        final prefs = await SharedPreferences.getInstance();
+        userAuth = prefs.getString('username');
+        casterId = prefs.getInt('casterId');
+        userEmail = prefs.getString('email');
+        if(casterId != null){
+          isCaster = true;
+        }
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => const Dashboard()
+          ));
+    }
+  }
 
   loginPressed() async {
     if(_email.isNotEmpty && _password.isNotEmpty) {
@@ -38,6 +66,11 @@ class _LoginState extends State<Login> {
           userId = responseMap['user']['id'];
           userEmail = responseMap['user']['email'];
           casterId = responseMap['caster']?['id'];
+          final prefs = await SharedPreferences.getInstance();
+          prefs.setString('username', responseMap['user']['username']);
+          prefs.setInt('casterId', responseMap['caster']?['id']);
+          prefs.setString('email', responseMap['user']['email']);
+          prefs.setString('token', responseMap['token']);
           if(casterId != null){
             isCaster = true;
           }

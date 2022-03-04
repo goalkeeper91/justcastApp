@@ -46,17 +46,17 @@ class AGB extends StatelessWidget {
             PopupMenuButton(
               itemBuilder: (context) {
                 return [
-                  if(userAuth.isNotEmpty)
+                  if(userAuth != null)
                     const PopupMenuItem<int>(
                       value: 0,
                       child: Text("Meine Anfragen"),
                     ),
-                  if(isCaster == true && userAuth.isNotEmpty)
+                  if(isCaster == true && userAuth != null)
                     const PopupMenuItem<int>(
                       value: 4,
                       child: Text("Angefragte Spiele"),
                     ),
-                  if(userAuth.isNotEmpty)
+                  if(userAuth != null)
                     const PopupMenuItem<int>(
                       value: 1,
                       child: Text("Mein Profil"),
@@ -69,12 +69,12 @@ class AGB extends StatelessWidget {
                         ]
                     ),
                   ),
-                  if(userAuth.isNotEmpty)
+                  if(userAuth != null)
                     const PopupMenuItem<int>(
                       value: 3,
                       child: Text("Logout"),
                     ),
-                  if(userAuth.isEmpty)
+                  if(userAuth != null)
                     const PopupMenuItem(
                         value: 5,
                         child: Text("Login"),

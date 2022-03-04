@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 const String baseURL = "https://www.justcast.org/api/";
 const Map<String,String> headers = {"Content-Type": "application/json"};
 final GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
-String userAuth = "";
+String? userAuth = null;
 int userId = 0;
-String userEmail = "";
+String? userEmail = "";
 String userPW = "";
 int? casterId;
 bool isCaster = false;
@@ -28,6 +28,6 @@ errorSnackBar(BuildContext context, String text) {
       SnackBar(
         backgroundColor: Colors.red,
         content: Text(text),
-        duration: const Duration(),
+        duration: const Duration(seconds: 5),
       ));
 }

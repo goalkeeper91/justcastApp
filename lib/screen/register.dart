@@ -11,6 +11,7 @@ import 'package:justcast_app/screen/login.dart';
 import 'package:justcast_app/services/auth_services.dart';
 import 'package:http/http.dart' as http;
 import 'package:justcast_app/services/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -37,7 +38,10 @@ class _RegisterState extends State<Register> {
         userId = responseMap['user']['id'];
         userEmail = responseMap['user']['email'];
         casterId = responseMap['caster']?['id'];
-        userAuth = responseMap['user']['username'];
+        SharedPreferences localStorage = await SharedPreferences.getInstance();
+        localStorage.setString('token', json.encode(responseMap['token']));
+        localStorage.setString('username', json.encode(responseMap['user']['username']));
+        localStorage.setString('password', _password);
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (BuildContext context) => const Dashboard()
             ));

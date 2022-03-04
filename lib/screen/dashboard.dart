@@ -46,6 +46,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future getMatches() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
     http.Response response = await DashboardService.dashboard(userAuth);
     if (response.statusCode == 200) {
       Map<String, dynamic> map = jsonDecode(response.body);

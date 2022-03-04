@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:justcast_app/provider/theme_provider.dart';
-import 'package:justcast_app/screen/add_new_match.dart';
 import 'package:justcast_app/screen/login.dart';
-import 'package:justcast_app/screen/register.dart';
+import 'package:justcast_app/services/globals.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const MaterialColor white = const MaterialColor(
   0xFFFFFFFF,
@@ -23,7 +22,7 @@ const MaterialColor white = const MaterialColor(
 );
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
